@@ -2280,3 +2280,86 @@ Pipeline complete! All 14 steps done.
 2026-04-27 10:04:17 | INFO | Phase 1 -- backbones frozen  (3.82M trainable, bs=32)
 2026-04-27 10:19:20 | INFO | Ep   1/18  lr=2.00e-04  tr_loss=0.4485 tr_acc=0.7483 tr_f1=0.7473  |  va_loss=0.3896 va_acc=0.8221 va_f1=0.8018  [903s]
 2026-04-27 10:41:37 | INFO |   [SAVED] EMA val F1=0.8018  -> hagcanet_pcam_best.pth
+2026-04-27 22:57:44 | INFO | ============================================================
+2026-04-27 22:57:44 | INFO |   STEP 13: PCam TRAIN + VALIDATE + TEST  (Scenario 3, v2)
+2026-04-27 22:57:44 | INFO | ============================================================
+2026-04-27 22:57:44 | INFO |   Training samples : 262,144
+2026-04-27 22:57:44 | INFO |   Val samples      : 16,384
+2026-04-27 22:57:44 | INFO |   Test samples     : 32,768
+2026-04-27 22:57:44 | INFO |   Phases           : 3 (frozen) + 15 (full)
+2026-04-27 22:57:44 | INFO |   Reg              : LS=0.05  MixUp=0.2@p0.5  EMA=0.9995  WD=0.0001
+2026-04-27 22:57:44 | INFO |   Inference        : TTA=on (4-flip)
+2026-04-27 22:57:44 | INFO |   Classes          : ['normal', 'tumor']
+2026-04-27 22:57:44 | INFO |   Checkpoint       : C:\ml_project\checkpoints\hagcanet_pcam_best.pth
+2026-04-27 22:57:44 | INFO | --force-retrain set: removing existing checkpoint.
+2026-04-27 22:57:44 | INFO | Starting training ...
+2026-04-27 22:57:45 | INFO | PCam splits  -- train: 262,144  val: 16,384  test: 32,768
+2026-04-27 22:57:45 | INFO | Computing Reinhard ref stats from 200 PCam training images ...
+2026-04-27 22:57:45 | INFO | Reinhard ref stats: [157.86, 46.87, 150.92, 7.76, 113.65, 6.16]
+2026-04-27 22:57:45 | INFO | Class counts -- normal: 131,072  tumor: 131,072
+2026-04-27 22:57:45 | INFO | Class weights: [1.0, 1.0]
+2026-04-27 22:57:48 | INFO | Model params: 100.66 M (all)
+2026-04-27 22:57:48 | INFO | Phase 1 -- backbones frozen  (3.82M trainable, bs=32)
+2026-04-27 23:26:31 | INFO | Ep   1/18  lr=2.00e-04  tr_loss=0.4249 tr_acc=0.7624 tr_f1=0.7615  |  va_loss=0.3514 va_acc=0.8433 va_f1=0.8300  [1723s]
+2026-04-27 23:26:32 | INFO |   [SAVED] EMA val F1=0.8300  -> hagcanet_pcam_best.pth
+2026-04-27 23:55:15 | INFO | Ep   2/18  lr=1.05e-04  tr_loss=0.3823 tr_acc=0.7831 tr_f1=0.7819  |  va_loss=0.3297 va_acc=0.8583 va_f1=0.8480  [1723s]
+2026-04-27 23:55:15 | INFO |   [SAVED] EMA val F1=0.8480  -> hagcanet_pcam_best.pth
+2026-04-28 00:23:36 | INFO | Ep   3/18  lr=1.00e-05  tr_loss=0.3556 tr_acc=0.7963 tr_f1=0.7948  |  va_loss=0.3349 va_acc=0.8539 va_f1=0.8405  [1701s]
+2026-04-28 00:23:36 | INFO | Phase 2 -- full fine-tune  (100.66M trainable, bs=16)
+2026-04-28 00:23:36 | INFO | PCam splits  -- train: 262,144  val: 16,384  test: 32,768
+2026-04-28 00:23:36 | INFO | Computing Reinhard ref stats from 200 PCam training images ...
+2026-04-28 00:23:36 | INFO | Reinhard ref stats: [157.86, 46.87, 150.92, 7.76, 113.65, 6.16]
+2026-04-28 00:23:36 | INFO | Class counts -- normal: 131,072  tumor: 131,072
+2026-04-28 00:23:36 | INFO | Class weights: [1.0, 1.0]
+2026-04-28 02:04:30 | INFO | Ep   4/18  lr=5.00e-05  tr_loss=0.3205 tr_acc=0.8209 tr_f1=0.8192  |  va_loss=0.2853 va_acc=0.8950 va_f1=0.8859  [6054s]
+2026-04-28 02:04:31 | INFO |   [SAVED] EMA val F1=0.8859  -> hagcanet_pcam_best.pth
+2026-04-28 03:43:02 | INFO | Ep   5/18  lr=4.94e-05  tr_loss=0.2818 tr_acc=0.8385 tr_f1=0.8373  |  va_loss=0.2842 va_acc=0.8998 va_f1=0.8915  [5912s]
+2026-04-28 03:43:03 | INFO |   [SAVED] EMA val F1=0.8915  -> hagcanet_pcam_best.pth
+2026-04-28 05:22:39 | INFO | Ep   6/18  lr=4.76e-05  tr_loss=0.2597 tr_acc=0.8490 tr_f1=0.8481  |  va_loss=0.3102 va_acc=0.8951 va_f1=0.8861  [5976s]
+2026-04-28 07:01:05 | INFO | Ep   7/18  lr=4.48e-05  tr_loss=0.2496 tr_acc=0.8530 tr_f1=0.8522  |  va_loss=0.2957 va_acc=0.9003 va_f1=0.8924  [5906s]
+2026-04-28 07:01:06 | INFO |   [SAVED] EMA val F1=0.8924  -> hagcanet_pcam_best.pth
+2026-04-28 08:40:19 | INFO | Ep   8/18  lr=4.11e-05  tr_loss=0.2385 tr_acc=0.8553 tr_f1=0.8546  |  va_loss=0.3238 va_acc=0.8919 va_f1=0.8823  [5954s]
+2026-04-28 10:17:28 | INFO | Ep   9/18  lr=3.66e-05  tr_loss=0.2329 tr_acc=0.8601 tr_f1=0.8595  |  va_loss=0.3328 va_acc=0.8918 va_f1=0.8833  [5828s]
+2026-04-28 11:55:37 | INFO | Ep  10/18  lr=3.15e-05  tr_loss=0.2230 tr_acc=0.8636 tr_f1=0.8632  |  va_loss=0.3536 va_acc=0.8864 va_f1=0.8759  [5889s]
+2026-04-28 13:32:23 | INFO | Ep  11/18  lr=2.63e-05  tr_loss=0.2153 tr_acc=0.8666 tr_f1=0.8662  |  va_loss=0.3820 va_acc=0.8811 va_f1=0.8699  [5807s]
+2026-04-28 15:10:57 | INFO | Ep  12/18  lr=2.10e-05  tr_loss=0.2122 tr_acc=0.8660 tr_f1=0.8657  |  va_loss=0.3804 va_acc=0.8799 va_f1=0.8680  [5914s]
+2026-04-28 16:50:15 | INFO | Ep  13/18  lr=1.59e-05  tr_loss=0.2049 tr_acc=0.8680 tr_f1=0.8677  |  va_loss=0.4012 va_acc=0.8777 va_f1=0.8654  [5958s]
+2026-04-28 16:50:15 | INFO | Early stopping at epoch 13 (patience=6)
+2026-04-28 16:50:15 | INFO | Training complete. Best val F1 = 0.8924 at epoch 7
+2026-04-28 16:50:15 | INFO | 
+Evaluating on test set ...
+2026-04-28 16:50:16 | INFO | Loaded: hagcanet_pcam_best.pth  (epoch 7, val_F1=0.8924)
+2026-04-28 16:50:16 | INFO | Test samples: 32,768   TTA: True
+2026-04-28 16:58:17 | INFO | 
+============================================================
+2026-04-28 16:58:17 | INFO |   PCam TEST SET RESULTS  (Scenario 3: PCam -> PCam)  [v2 + TTA]
+2026-04-28 16:58:17 | INFO | ============================================================
+2026-04-28 16:58:17 | INFO |   Accuracy       : 0.8969  (89.69%)
+2026-04-28 16:58:17 | INFO |   Precision      : 0.9805
+2026-04-28 16:58:17 | INFO |   Recall (tumor) : 0.8097
+2026-04-28 16:58:17 | INFO |   F1 (binary)    : 0.8870
+2026-04-28 16:58:17 | INFO |   ROC-AUC        : 0.9732
+2026-04-28 16:58:17 | INFO | 
+              precision    recall  f1-score   support
+
+      normal     0.8381    0.9839    0.9051     16391
+       tumor     0.9805    0.8097    0.8870     16377
+
+    accuracy                         0.8969     32768
+   macro avg     0.9093    0.8968    0.8961     32768
+weighted avg     0.9092    0.8969    0.8961     32768
+
+2026-04-28 16:58:17 | INFO | Metrics saved: C:\ml_project\results\metrics\pcam_train_test_metrics.json
+2026-04-28 16:58:17 | INFO | Report saved: C:\ml_project\results\metrics\pcam_train_test_report.txt
+2026-04-28 16:58:18 | INFO | Confusion matrix saved: C:\ml_project\results\plots\pcam_confusion_matrix.png
+2026-04-28 16:58:18 | INFO | 
+Next: python src\14_compare_scenarios.py  (or: python main.py)
+2026-04-28 19:13:42 | INFO | ============================================================
+2026-04-28 19:13:42 | INFO |   STEP 14: THREE-SCENARIO COMPARISON
+2026-04-28 19:13:42 | INFO | ============================================================
+2026-04-28 19:13:42 | INFO | All three scenario metric files loaded.
+2026-04-28 19:13:42 | INFO | Text report saved: C:\ml_project\results\summary\scenario_comparison.txt
+2026-04-28 19:13:42 | INFO | JSON saved: C:\ml_project\results\summary\scenario_comparison.json
+2026-04-28 19:13:42 | INFO | 
+Pipeline complete! All 14 steps done.
+2026-04-28 19:13:42 | INFO | See results/summary/scenario_comparison.txt for the full comparison.

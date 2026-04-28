@@ -85,7 +85,7 @@ HAGCANet = _model.HAGCANet
 # ============================================================================
 
 # ---- Training scale ---------------------------------------------------------
-MAX_TRAIN_SAMPLES = 130_000      # None = full 262,144  (recommended for >98%)
+MAX_TRAIN_SAMPLES = None     # None = full 262,144  (recommended for >98%)
 MAX_VAL_SAMPLES   = 16_384    # subset of the 32,768 validation images for speed
 MAX_TEST_SAMPLES  = None      # None = full 32,768  (always evaluate all)
 
