@@ -8,7 +8,7 @@ last_metrics:
   f1_binary: 0.8870
   roc_auc: 0.9732
   chosen_threshold: null
-last_commit_sha: b84fbcdfe2719861019bea03854fdee270b0abf1
+last_commit_sha: 94d561c3cbae278a8ba87731363de61fe31623de
 last_commit_tag: phase-0-complete
 timestamp: 2026-04-29T10:31:00+05:30
 notes: Baseline frozen from 7-epoch PCam v2 ckpt; baseline gate overridden by user.
