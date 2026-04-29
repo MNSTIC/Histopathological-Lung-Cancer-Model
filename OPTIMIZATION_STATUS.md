@@ -8,7 +8,7 @@ last_metrics:
   f1_binary: 0.9129
   roc_auc: 0.9735
   chosen_threshold: 0.16
-last_commit_sha: PHASE1_PLACEHOLDER
+last_commit_sha: 55537855ba9c0b69a1a750e069ec0e9a8e91737d
 last_commit_tag: phase-1-complete
 timestamp: 2026-04-29T11:15:00+05:30
 notes: Phase 1 PASSED (delta F1 +0.0259). 8-aug TTA + tuned tau=0.16. Same ckpt.
