@@ -1,0 +1,19 @@
+{
+  "scenario": "PCam_trained_PCam_tested",
+  "train_data": "PatchCamelyon",
+  "test_data": "PatchCamelyon",
+  "n_train": 262144,
+  "n_test": 32768,
+  "num_classes": 2,
+  "accuracy": 0.8969,
+  "precision": 0.9805,
+  "recall": 0.8097,
+  "f1_binary": 0.887,
+  "roc_auc": 0.9732,
+  "checkpoint": "hagcanet_pcam_best.pth",
+  "val_f1": 0.8924,
+  "best_epoch": 7,
+  "preprocessing": "ReinhardNorm(PCam-ref) + CLAHE",
+  "training_tricks": "AdamW + cosine + warmup + mixup + label_smoothing + EMA + grad_clip",
+  "inference": "TTA: orig+hflip+vflip+hvflip"
+}

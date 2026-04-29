@@ -143,3 +143,34 @@ C:\ml_project\
 2. Write 04_augmentation.py (Dataset class + torchvision transforms)
 3. Write 05_gan_augment.py (DCGAN for synthetic lung_scc samples)
 4. Write 06_model_hagcanet.py (the main HAGCA-Net model)
+
+### Session 8 - 2026-04-29 - Phase 0 (Optimization Pipeline Baseline)
+
+**Work Done:**
+- Started post-hoc optimization protocol (4 phases) on PCam Scenario 3.
+- Verified baseline metrics file: accuracy=0.8969, F1=0.8870, AUC=0.9732, best_epoch=7.
+- The protocol's `best_epoch >= 8` gate failed; user explicitly overrode with
+  rationale that the gate was a ghost-checkpoint heuristic, not a quality
+  criterion. Run early-stopped legitimately after ~13 total epochs.
+- Froze baseline artifacts:
+  - checkpoints/hagcanet_pcam_baseline.pth (copy of hagcanet_pcam_best.pth)
+  - results/metrics/pcam_train_test_metrics_baseline.json
+- Created OPTIMIZATION_STATUS.md at project root with baseline_provenance field.
+- Git already initialized; skipped re-init / v1.0-paper-results substeps.
+
+**Phase 0 Metrics (baseline reference):**
+| Metric    | Value  |
+|-----------|--------|
+| Accuracy  | 0.8969 |
+| Precision | 0.9805 |
+| Recall    | 0.8097 |
+| F1        | 0.8870 |
+| ROC-AUC   | 0.9732 |
+
+**Files Created/Modified:**
+- C:\ml_project\OPTIMIZATION_STATUS.md (new)
+- C:\ml_project\checkpoints\hagcanet_pcam_baseline.pth (copy)
+- C:\ml_project\results\metrics\pcam_train_test_metrics_baseline.json (copy)
+- C:\ml_project\CLAUDE.md (this entry)
+
+**Next:** Phase 1 — post-hoc threshold tuning + 8-aug TTA (no retraining).
