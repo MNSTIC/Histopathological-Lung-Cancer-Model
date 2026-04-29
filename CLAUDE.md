@@ -174,3 +174,45 @@ C:\ml_project\
 - C:\ml_project\CLAUDE.md (this entry)
 
 **Next:** Phase 1 — post-hoc threshold tuning + 8-aug TTA (no retraining).
+
+### Session 8 (cont.) - 2026-04-29 - Phase 1 (Threshold + 8-aug TTA)
+
+**Work Done:**
+- Wrote src/13b_threshold_tta.py: post-hoc evaluation with 8-augmentation TTA
+  ({orig,hflip,vflip,hvflip} x {orig,rot90}, mean softmax) + threshold sweep
+  on val set (tau in [0.05, 0.95] step 0.01, maximize binary F1).
+- Did NOT touch 13_pcam_train_test.py or 06_model_hagcanet.py.
+- Ran on the existing 7-epoch checkpoint (hagcanet_pcam_best.pth).
+- Best val tau* = 0.16 (val F1 = 0.9144 with 8-aug TTA, 16,384 val samples).
+- Applied tau* to test set (32,768 samples).
+- Wall time: ~25 min (val ~9 min + test ~17 min on RTX 5060 batch=16).
+
+**Phase 1 Metrics:**
+| Metric    | Baseline | Tuned (tau=0.16, 8-aug) | Delta   |
+|-----------|----------|-------------------------|---------|
+| Accuracy  | 0.8969   | 0.9166                  | +0.0197 |
+| Precision | 0.9805   | 0.9547                  | -0.0258 |
+| Recall    | 0.8097   | 0.8745                  | +0.0648 |
+| F1        | 0.8870   | 0.9129                  | +0.0259 |
+| ROC-AUC   | 0.9732   | 0.9735                  | +0.0003 |
+
+**Verification:** ΔF1 = +0.0259 >= 0.02 -> PASSED gate.
+
+The low tau* (0.16) confirms the diagnosis from Session 7: the model's
+discriminative power was strong (AUC ~0.973) but the default 0.5 threshold
+was systematically biased against the tumor class, suppressing recall. Tuning
+the threshold to match the validation distribution recovers ~6.5pp of recall
+at a smaller (~2.6pp) precision cost, net F1 +2.6pp.
+
+**Files Created/Modified:**
+- C:\ml_project\src\13b_threshold_tta.py (new)
+- C:\ml_project\results\metrics\pcam_train_test_metrics_threshold.json (new)
+- C:\ml_project\results\metrics\pcam_threshold_sweep.json (new)
+- C:\ml_project\results\plots\pcam_threshold_sweep.png (new)
+- C:\ml_project\results\plots\pcam_confusion_matrix_tuned.png (new)
+- C:\ml_project\OPTIMIZATION_STATUS.md (updated)
+- C:\ml_project\CLAUDE.md (this entry)
+
+**Next:** Phase 2 — training-speed optimization (precache + channels_last +
+torch.compile flag + bigger eval batch). Verification: bit-identical eval
+metrics, then smoke-train test.

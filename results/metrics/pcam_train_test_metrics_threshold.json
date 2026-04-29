@@ -1,0 +1,26 @@
+{
+  "scenario": "PCam_trained_PCam_tested",
+  "phase": 1,
+  "tta": "8-aug",
+  "tta_detail": "{orig,hflip,vflip,hvflip} x {orig,rot90}",
+  "chosen_threshold": 0.16,
+  "n_test": 32768,
+  "accuracy": 0.9166,
+  "precision": 0.9547,
+  "recall": 0.8745,
+  "f1_binary": 0.9129,
+  "roc_auc": 0.9735,
+  "delta_vs_baseline": {
+    "accuracy": 0.0197,
+    "precision": -0.0258,
+    "recall": 0.0648,
+    "f1_binary": 0.0259,
+    "roc_auc": 0.0003
+  },
+  "checkpoint": "hagcanet_pcam_best.pth",
+  "ckpt_epoch": 7,
+  "ckpt_val_f1": 0.8924,
+  "val_n": 16384,
+  "val_best_tau": 0.16,
+  "val_best_f1": 0.9144
+}
