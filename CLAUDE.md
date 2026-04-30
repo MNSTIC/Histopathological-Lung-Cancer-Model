@@ -275,3 +275,58 @@ metrics, then smoke-train test.
 **Next:** Phase 3 — full-data retrain with optimized code. User will launch
 the run themselves outside Claude Code to save tokens; resume here for the
 post-training analysis.
+
+### Session 8 (cont.) - 2026-04-30 - Phase 2 hotfix (cache for eval-only)
+
+**Bug discovered during Phase 3 launch:**
+User launched `python src/13_pcam_train_test.py --force-retrain` at 11:35.
+After 2h13m of wall-clock, Phase 1 epoch 1 still hadn't completed. Live
+diagnosis:
+- Python PID 18528 alive, ~43h CPU time accumulated (heavy thrashing).
+- nvidia-smi: GPU at 16% utilization, 2.7/8.1 GB used. Severely I/O-bound.
+- No checkpoint written yet (epoch 1 not finished).
+
+**Root cause:** my Phase 2 cache uses `chunks=(64,224,224,3)` with
+`compression="gzip" level=4`. For sequential reads (val/test) this is fine
+- neighbours share a chunk, decompressed once. For shuffled training reads,
+every batch of 32 random samples touches ~32 different gzip chunks => 32
+gzip decompressions of ~9.6 MB each per batch. Gzip decompression on
+Windows became the bottleneck. The cache HELPED eval (~10 min on test) but
+HARMED training (~7x slower than expected).
+
+**Why the smoke-train would have caught this** but didn't run (skipped per
+user direction to conserve tokens). Lesson: smoke-train protects against
+exactly this class of regression.
+
+**Fix (Option A, user choice):** train always reads from raw PCam H5 (the
+pre-Phase-2 fast random-access path); val/test continue to use the cache
+(sequential access, fast). No change to model, transforms math, augs,
+or hyperparameters.
+
+**Code changes (this hotfix):**
+- `make_transforms` now accepts independent `use_cached_train` and
+  `use_cached_eval` kwargs. Legacy `use_cached` still works (sets both).
+- `build_pcam_loaders` forces `use_cache_train=False`, keeps
+  `use_cache_eval=cache_available`. Train DS gets `preprocessed_h5_path=None`,
+  val/test DS get the cache. Reinhard ref-stat warmup always runs (train
+  needs them).
+- `evaluate_test` unchanged (already used the cache via legacy single-flag
+  call).
+
+**Verification:** import smoke test confirms:
+- legacy call `use_cached=False`: train_tf 11 ops (3 prefix + 8 augs),
+  val_tf 5 ops (3 prefix + ToTensor + Normalize).
+- new call `use_cached_train=False, use_cached_eval=True`: train_tf 11 ops
+  (with raw prefix), val_tf 2 ops (no prefix). As expected.
+- Full eval-only re-run skipped (eval path code is unchanged; same cuDNN
+  drift +/- 0.0001 on 1 sample expected).
+
+**Files Modified:**
+- C:\ml_project\src\13_pcam_train_test.py (make_transforms +
+  build_pcam_loaders)
+- C:\ml_project\OPTIMIZATION_STATUS.md (updated)
+- C:\ml_project\CLAUDE.md (this entry)
+
+**Next:** User re-launches Phase 3 retrain. Expected ~12-20 min/epoch x 18
+epochs ~= 4-6 hours total (matches the original Session 7 scaling for
+130K -> 262K samples).

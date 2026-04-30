@@ -11,7 +11,7 @@ last_metrics:
 last_commit_sha: 6b5d06471d2081da50e79140035c9990abb64c27
 last_commit_tag: phase-2-complete
 timestamp: 2026-04-29T20:25:00+05:30
-notes: Phase 2 complete; 1-sample CUDA-determinism drift accepted via Option C. Smoke-train skipped per user.
+notes: Phase 2 complete + hotfix; train uses raw H5, eval uses cache. 1-sample CUDA drift accepted via Option C.
 baseline_provenance: v2_run_session_7_early_stopped_at_epoch_7_total_13_epochs_run_accepted_via_override
 behavioral_drift_notes: "Phase 2 introduces 1-sample (1/32768) precision/recall drift of ±0.0001 vs baseline at default τ=0.5. AUC, F1, accuracy unchanged at 4dp. Cause: cuDNN kernel selection under channels_last + EVAL_BATCH_SIZE=64 + FP16 AMP. Below natural CUDA non-determinism; accepted via Option C."
 ---
@@ -26,9 +26,12 @@ eval semantics (modulo a single-sample CUDA non-determinism flip — see
 - New file: src/13a_precache_pcam.py (idempotent Reinhard+CLAHE+Resize cache)
 - Modified: src/13_pcam_train_test.py
   - USE_PRECACHE / USE_TORCH_COMPILE / EVAL_BATCH_SIZE / RAM_CACHE_LIMIT_BYTES constants
-  - make_transforms(use_cached=...) skips per-sample preprocessing when cache provides it
+  - make_transforms() now takes use_cached_train + use_cached_eval (legacy use_cached still works)
   - PCamDataset gains preprocessed_h5_path / cache_split_key / ram_cache args
-  - build_pcam_loaders auto-detects cache; uses EVAL_BATCH_SIZE=64 for val/test
+  - build_pcam_loaders: cache for val/test only (use_cache_train=False, use_cache_eval=cache_available)
+    -- HOTFIX: train always reads raw PCam H5 because gzip-compressed cache is slow
+       under shuffle=True random access (caught during Phase 3 launch attempt; GPU at 16%
+       utilization confirmed I/O-bound). EVAL_BATCH_SIZE=64 for val/test.
   - _wrap_model_speed: model.to(memory_format=torch.channels_last) + optional torch.compile (off by default)
   - Inputs pushed to channels_last before forward in train/eval loops
 - New artifact: data/external_test/pcam_preprocessed.h5 (44.32 GB, gitignored)

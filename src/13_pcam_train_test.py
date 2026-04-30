@@ -218,23 +218,37 @@ class CLAHEEnhance:
 #  Transform pipelines  (stronger augmentation in v2)
 # ============================================================================
 
-def make_transforms(pcam_img_train_h5, use_cached=False):
-    """When use_cached=True, the input PIL is already Reinhard+CLAHE+Resize'd
-    to 224x224 by the precache step, so the prefix is a no-op. The remaining
-    augmentation pipeline is identical -- so RNG-driven augs match
-    bit-identically with the same seed."""
-    if use_cached:
-        prefix = []
-    else:
-        reinhard = ReinhardNorm(img_h5_path=str(pcam_img_train_h5))
-        clahe    = CLAHEEnhance()
-        prefix = [
-            reinhard,
-            clahe,
-            transforms.Resize((IMG_SIZE, IMG_SIZE)),
-        ]
+def make_transforms(pcam_img_train_h5, use_cached=False,
+                    use_cached_train=None, use_cached_eval=None):
+    """Builds (train_tf, val_tf).
 
-    train_tf = transforms.Compose(prefix + [
+    For each split, if use_cached_* is True, the input PIL is already
+    Reinhard+CLAHE+Resize'd to IMG_SIZE by the precache step and the
+    deterministic prefix is dropped. The remaining augmentation pipeline
+    is unchanged, so RNG-driven augs are bit-identical for the same seed.
+
+    Backwards-compat: passing only use_cached sets both train and eval to
+    the same value. Passing use_cached_train / use_cached_eval explicitly
+    overrides each independently -- the Phase 2 hotfix uses
+    use_cached_train=False (raw H5, fast random access) +
+    use_cached_eval=True (cache, fast sequential access).
+    """
+    if use_cached_train is None:
+        use_cached_train = use_cached
+    if use_cached_eval is None:
+        use_cached_eval = use_cached
+
+    reinhard = ReinhardNorm(img_h5_path=str(pcam_img_train_h5))
+    clahe    = CLAHEEnhance()
+    raw_prefix = [
+        reinhard,
+        clahe,
+        transforms.Resize((IMG_SIZE, IMG_SIZE)),
+    ]
+    train_prefix = [] if use_cached_train else raw_prefix
+    eval_prefix  = [] if use_cached_eval  else raw_prefix
+
+    train_tf = transforms.Compose(train_prefix + [
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.RandomVerticalFlip(p=0.5),
         transforms.RandomRotation(20),
@@ -247,7 +261,7 @@ def make_transforms(pcam_img_train_h5, use_cached=False):
         transforms.RandomErasing(p=0.25, scale=(0.02, 0.15)),
     ])
 
-    val_tf = transforms.Compose(prefix + [
+    val_tf = transforms.Compose(eval_prefix + [
         transforms.ToTensor(),
         transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
     ])
@@ -427,38 +441,48 @@ def build_pcam_loaders(batch_size, logger):
         if not p.exists():
             logger.error(f"Missing: {p}"); sys.exit(1)
 
-    use_cache = USE_PRECACHE and PCAM_PREPROC_H5.exists()
-    cache_path = PCAM_PREPROC_H5 if use_cache else None
-    if use_cache:
-        logger.info(f"Using preprocessed cache: {PCAM_PREPROC_H5.name}")
+    # ---- Phase 2 hotfix: cache helps eval (sequential reads) but hurts train
+    # (gzip random reads from shuffled DataLoader). Use cache for val/test only;
+    # train reads from the raw H5, same as the pre-Phase-2 code path.
+    cache_available = USE_PRECACHE and PCAM_PREPROC_H5.exists()
+    use_cache_train = False                 # always raw H5 for train (random access)
+    use_cache_eval  = cache_available       # cache for val/test (sequential access)
+    eval_cache_path = PCAM_PREPROC_H5 if use_cache_eval else None
+    if cache_available:
+        logger.info(f"Using preprocessed cache for eval only: {PCAM_PREPROC_H5.name}")
+        logger.info("Train: raw H5 (cache disabled for shuffle=True random access).")
     else:
         logger.info("No preprocessed cache; running Reinhard+CLAHE+Resize per sample.")
 
-    train_tf, val_tf = make_transforms(img_train, use_cached=use_cache)
+    train_tf, val_tf = make_transforms(
+        img_train,
+        use_cached_train=use_cache_train,
+        use_cached_eval=use_cache_eval,
+    )
 
     train_ds = PCamDataset(img_train, lbl_train, train_tf,
                            max_samples=MAX_TRAIN_SAMPLES,
-                           preprocessed_h5_path=cache_path,
-                           cache_split_key="train" if use_cache else None,
-                           ram_cache=use_cache, logger=logger)
+                           preprocessed_h5_path=None,
+                           cache_split_key=None,
+                           ram_cache=False, logger=logger)
     val_ds   = PCamDataset(img_val,   lbl_val,   val_tf,
                            max_samples=MAX_VAL_SAMPLES,
-                           preprocessed_h5_path=cache_path,
-                           cache_split_key="val" if use_cache else None,
-                           ram_cache=use_cache, logger=logger)
+                           preprocessed_h5_path=eval_cache_path,
+                           cache_split_key="val" if use_cache_eval else None,
+                           ram_cache=use_cache_eval, logger=logger)
     test_ds  = PCamDataset(img_test,  lbl_test,  val_tf,
                            max_samples=MAX_TEST_SAMPLES,
-                           preprocessed_h5_path=cache_path,
-                           cache_split_key="test" if use_cache else None,
-                           ram_cache=use_cache, logger=logger)
+                           preprocessed_h5_path=eval_cache_path,
+                           cache_split_key="test" if use_cache_eval else None,
+                           ram_cache=use_cache_eval, logger=logger)
 
     logger.info(f"PCam splits  -- train: {len(train_ds):,}  "
                 f"val: {len(val_ds):,}  test: {len(test_ds):,}")
 
-    if not use_cache:
-        logger.info(f"Computing Reinhard ref stats from {REF_STAT_SAMPLES} PCam training images ...")
-        train_ds[0]
-        logger.info(f"Reinhard ref stats: {[round(v, 2) for v in ReinhardNorm._ref_stats]}")
+    # Train always uses the raw pipeline -> warm up Reinhard ref stats now.
+    logger.info(f"Computing Reinhard ref stats from {REF_STAT_SAMPLES} PCam training images ...")
+    train_ds[0]
+    logger.info(f"Reinhard ref stats: {[round(v, 2) for v in ReinhardNorm._ref_stats]}")
 
     counts = np.bincount(train_ds.labels, minlength=2)
     w = torch.tensor(1.0 / counts, dtype=torch.float32)
