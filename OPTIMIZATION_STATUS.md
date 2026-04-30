@@ -1,36 +1,50 @@
 ---
-last_phase_completed: 1
-next_phase: 2
+last_phase_completed: 2
+next_phase: 3
 last_metrics:
-  accuracy: 0.9166
-  precision: 0.9547
-  recall: 0.8745
-  f1_binary: 0.9129
-  roc_auc: 0.9735
-  chosen_threshold: 0.16
-last_commit_sha: 55537855ba9c0b69a1a750e069ec0e9a8e91737d
-last_commit_tag: phase-1-complete
-timestamp: 2026-04-29T11:15:00+05:30
-notes: Phase 1 PASSED (delta F1 +0.0259). 8-aug TTA + tuned tau=0.16. Same ckpt.
+  accuracy: 0.8969
+  precision: 0.9804
+  recall: 0.8098
+  f1_binary: 0.8870
+  roc_auc: 0.9732
+  chosen_threshold: 0.5
+last_commit_sha: PHASE2_PLACEHOLDER
+last_commit_tag: phase-2-complete
+timestamp: 2026-04-29T20:25:00+05:30
+notes: Phase 2 complete; 1-sample CUDA-determinism drift accepted via Option C. Smoke-train skipped per user.
 baseline_provenance: v2_run_session_7_early_stopped_at_epoch_7_total_13_epochs_run_accepted_via_override
+behavioral_drift_notes: "Phase 2 introduces 1-sample (1/32768) precision/recall drift of ±0.0001 vs baseline at default τ=0.5. AUC, F1, accuracy unchanged at 4dp. Cause: cuDNN kernel selection under channels_last + EVAL_BATCH_SIZE=64 + FP16 AMP. Below natural CUDA non-determinism; accepted via Option C."
 ---
 
 # HAGCA-Net Optimization Status
 
-Phase 1 complete. Post-hoc evaluation only — no retraining, no architectural
-or hyperparameter changes. The 7-epoch baseline checkpoint is unchanged.
+Phase 2 complete. Training-speed optimizations applied with bit-identical
+eval semantics (modulo a single-sample CUDA non-determinism flip — see
+`behavioral_drift_notes` above).
 
-## Phase 1 results (8-aug TTA + tuned threshold)
-- Accuracy   : 0.9166  (baseline 0.8969,  +0.0197)
-- Precision  : 0.9547  (baseline 0.9805,  -0.0258)
-- Recall     : 0.8745  (baseline 0.8097,  +0.0648)
-- F1 (binary): 0.9129  (baseline 0.8870,  +0.0259)
-- ROC-AUC    : 0.9735  (baseline 0.9732,  +0.0003)
-- chosen tau : 0.16
-- val tau*   : 0.16  (val F1 0.9144 on 16,384 samples)
+## Phase 2 changes
+- New file: src/13a_precache_pcam.py (idempotent Reinhard+CLAHE+Resize cache)
+- Modified: src/13_pcam_train_test.py
+  - USE_PRECACHE / USE_TORCH_COMPILE / EVAL_BATCH_SIZE / RAM_CACHE_LIMIT_BYTES constants
+  - make_transforms(use_cached=...) skips per-sample preprocessing when cache provides it
+  - PCamDataset gains preprocessed_h5_path / cache_split_key / ram_cache args
+  - build_pcam_loaders auto-detects cache; uses EVAL_BATCH_SIZE=64 for val/test
+  - _wrap_model_speed: model.to(memory_format=torch.channels_last) + optional torch.compile (off by default)
+  - Inputs pushed to channels_last before forward in train/eval loops
+- New artifact: data/external_test/pcam_preprocessed.h5 (44.32 GB, gitignored)
 
-## Verification
-ΔF1 = +0.0259 ≥ 0.02 gate -> PASSED.
+## Phase 2 verification (eval-only on the same 7-epoch ckpt)
+- Accuracy   : 0.8969  (baseline 0.8969)
+- Precision  : 0.9804  (baseline 0.9805,  delta -0.0001)
+- Recall     : 0.8098  (baseline 0.8097,  delta +0.0001)
+- F1 (binary): 0.8870  (baseline 0.8870)
+- ROC-AUC    : 0.9732  (baseline 0.9732)
+- Smoke-train SKIPPED per user direction (token conservation; Phase 3 will exercise training).
+
+## Operational note (worktree)
+The /c/ml_project/.claude/worktrees/stupefied-rhodes-07196d/src/ tree has
+the pre-Phase-2 source code; all real work lives at /c/ml_project/src/.
+Run scripts with `cd /c/ml_project &&` so the project-root code is loaded.
 
 ## Frozen artifacts
 - checkpoints/hagcanet_pcam_baseline.pth                   (Phase 0)
@@ -40,8 +54,10 @@ or hyperparameter changes. The 7-epoch baseline checkpoint is unchanged.
 - results/plots/pcam_threshold_sweep.png                   (Phase 1)
 - results/plots/pcam_confusion_matrix_tuned.png            (Phase 1)
 - src/13b_threshold_tta.py                                 (Phase 1)
+- src/13a_precache_pcam.py                                 (Phase 2)
+- data/external_test/pcam_preprocessed.h5                  (Phase 2, 44.32 GB)
 
 ## Next
-Phase 2 — training-speed optimization (precache Reinhard+CLAHE+resize,
-channels_last, torch.compile flag, EVAL_BATCH_SIZE=64, optional RAM-load).
-Hard requirement: eval metrics must match Phase 0 baseline to 4 dp.
+Phase 3 — full-data retrain. User will launch the run themselves outside
+Claude Code; this session resumes for post-training analysis (threshold
+re-tune via 13b_threshold_tta.py, scenario comparison refresh, etc.).

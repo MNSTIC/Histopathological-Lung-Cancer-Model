@@ -216,3 +216,62 @@ at a smaller (~2.6pp) precision cost, net F1 +2.6pp.
 **Next:** Phase 2 — training-speed optimization (precache + channels_last +
 torch.compile flag + bigger eval batch). Verification: bit-identical eval
 metrics, then smoke-train test.
+
+### Session 8 (cont.) - 2026-04-29 - Phase 2 (Speed Optimizations)
+
+**Work Done:**
+- Wrote src/13a_precache_pcam.py: idempotent one-shot Reinhard+CLAHE+Resize
+  pipeline that writes preprocessed 224x224x3 uint8 arrays to
+  data/external_test/pcam_preprocessed.h5 (datasets train_x/y, val_x/y,
+  test_x/y). Reuses _reinhard_normalize / _apply_clahe from the training
+  module so the math stays in lockstep. Same Reinhard ref-stats (200
+  samples, seed=42) as the loader.
+- Modified src/13_pcam_train_test.py:
+  - Added USE_PRECACHE, USE_TORCH_COMPILE, EVAL_BATCH_SIZE,
+    RAM_CACHE_LIMIT_BYTES constants.
+  - make_transforms() takes use_cached flag; skips Reinhard+CLAHE+Resize
+    prefix when cache provides them.
+  - PCamDataset now accepts preprocessed_h5_path / cache_split_key /
+    ram_cache. RAM-loads per-split arrays under the 8 GB ceiling.
+  - build_pcam_loaders auto-detects the cache and uses EVAL_BATCH_SIZE=64
+    for val/test loaders (train batch unchanged).
+  - Added _to_channels_last(t) and _wrap_model_speed(model, logger):
+    converts model to channels_last on CUDA, optionally wraps with
+    torch.compile(mode="reduce-overhead") with try/except fallback.
+  - Train/eval loops now call .to(memory_format=torch.channels_last) on
+    inputs before forward.
+  - evaluate_test() uses the cache + EVAL_BATCH_SIZE too.
+- Cache build wall time: ~28 min (train 21 min + val 3 min + test 3 min)
+  for 327,680 images. Cache file: 44.32 GB (gzip-4 compressed).
+- Verification (eval-only) results:
+  | Metric    | Baseline | Phase 2 | Delta   |
+  |-----------|----------|---------|---------|
+  | Accuracy  | 0.8969   | 0.8969  | 0.0000  |
+  | Precision | 0.9805   | 0.9804  | -0.0001 |
+  | Recall    | 0.8097   | 0.8098  | +0.0001 |
+  | F1        | 0.8870   | 0.8870  | 0.0000  |
+  | ROC-AUC   | 0.9732   | 0.9732  | 0.0000  |
+- One sample (1 / 32,768) flips at the tau=0.5 boundary. Caused by cuDNN
+  kernel selection differing under channels_last + EVAL_BATCH_SIZE=64 +
+  FP16 AMP. Cache by itself is bit-identical (same Reinhard ref stats and
+  Resize op as the in-loader path). User accepted the drift via Option C
+  (sub-natural-variance, AUC/F1/accuracy unchanged at 4dp).
+- Smoke-train SKIPPED at user request (token conservation; Phase 3 full
+  retrain will demonstrate training-time correctness).
+- Worktree note: my initial eval-only run hit the worktree copy at
+  C:\ml_project\.claude\worktrees\stupefied-rhodes-07196d\src\ which had
+  the OLD pre-Phase-2 file. Project root and worktree have diverged source
+  trees. Going forward all scripts MUST be run with `cd /c/ml_project &&`
+  prefix to ensure the edited code at C:\ml_project\src\ is what runs.
+
+**Files Created/Modified:**
+- C:\ml_project\src\13a_precache_pcam.py (new)
+- C:\ml_project\src\13_pcam_train_test.py (modified)
+- C:\ml_project\data\external_test\pcam_preprocessed.h5 (new, 44.32 GB,
+  gitignored under data/)
+- C:\ml_project\OPTIMIZATION_STATUS.md (updated)
+- C:\ml_project\CLAUDE.md (this entry)
+
+**Next:** Phase 3 — full-data retrain with optimized code. User will launch
+the run themselves outside Claude Code to save tokens; resume here for the
+post-training analysis.

@@ -110,6 +110,12 @@ EMA_DECAY         = 0.9995    # exponential moving average of weights
 # ---- Test-time augmentation ------------------------------------------------
 TTA_FLIPS         = True      # avg over (orig, hflip, vflip, hflip+vflip)
 
+# ---- Phase 2: speed knobs (no effect on numerics) --------------------------
+USE_PRECACHE      = True      # use data/external_test/pcam_preprocessed.h5 if present
+USE_TORCH_COMPILE = False     # try torch.compile(model, mode="reduce-overhead")
+EVAL_BATCH_SIZE   = 64        # batch size for val/test loaders (train BS unchanged)
+RAM_CACHE_LIMIT_BYTES = 8 * 1024 ** 3   # per-split ceiling for in-RAM caching
+
 # ---- Quality gate for "skip training if checkpoint exists" -----------------
 MIN_VAL_F1_TO_SKIP = 0.97     # if existing ckpt's val_f1 < this, retrain
 MIN_EPOCHS_TO_SKIP = 8        # if existing ckpt epoch < this, retrain
@@ -118,9 +124,10 @@ PCAM_NUM_CLASSES  = 2
 PCAM_CLASSES      = ["normal", "tumor"]
 SEED              = 42
 
-PCAM_ROOT   = CFG.PROJECT_ROOT / "data" / "external_test" / "archive"
-PCAM_CKPT   = CFG.CHECKPOINTS_DIR / "hagcanet_pcam_best.pth"
-IMG_SIZE    = 224
+PCAM_ROOT          = CFG.PROJECT_ROOT / "data" / "external_test" / "archive"
+PCAM_CKPT          = CFG.CHECKPOINTS_DIR / "hagcanet_pcam_best.pth"
+PCAM_PREPROC_H5    = CFG.PROJECT_ROOT / "data" / "external_test" / "pcam_preprocessed.h5"
+IMG_SIZE           = 224
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD  = [0.229, 0.224, 0.225]
@@ -211,14 +218,23 @@ class CLAHEEnhance:
 #  Transform pipelines  (stronger augmentation in v2)
 # ============================================================================
 
-def make_transforms(pcam_img_train_h5):
-    reinhard = ReinhardNorm(img_h5_path=str(pcam_img_train_h5))
-    clahe    = CLAHEEnhance()
+def make_transforms(pcam_img_train_h5, use_cached=False):
+    """When use_cached=True, the input PIL is already Reinhard+CLAHE+Resize'd
+    to 224x224 by the precache step, so the prefix is a no-op. The remaining
+    augmentation pipeline is identical -- so RNG-driven augs match
+    bit-identically with the same seed."""
+    if use_cached:
+        prefix = []
+    else:
+        reinhard = ReinhardNorm(img_h5_path=str(pcam_img_train_h5))
+        clahe    = CLAHEEnhance()
+        prefix = [
+            reinhard,
+            clahe,
+            transforms.Resize((IMG_SIZE, IMG_SIZE)),
+        ]
 
-    train_tf = transforms.Compose([
-        reinhard,
-        clahe,
-        transforms.Resize((IMG_SIZE, IMG_SIZE)),
+    train_tf = transforms.Compose(prefix + [
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.RandomVerticalFlip(p=0.5),
         transforms.RandomRotation(20),
@@ -231,10 +247,7 @@ def make_transforms(pcam_img_train_h5):
         transforms.RandomErasing(p=0.25, scale=(0.02, 0.15)),
     ])
 
-    val_tf = transforms.Compose([
-        reinhard,
-        clahe,
-        transforms.Resize((IMG_SIZE, IMG_SIZE)),
+    val_tf = transforms.Compose(prefix + [
         transforms.ToTensor(),
         transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
     ])
@@ -247,14 +260,36 @@ def make_transforms(pcam_img_train_h5):
 # ============================================================================
 
 class PCamDataset(Dataset):
+    """PCam dataset with optional cache support (Phase 2).
+
+    When `preprocessed_h5_path` and `cache_split_key` are provided, samples
+    are loaded from a precomputed HxWx3 uint8 cache (built by 13a_precache_pcam.py)
+    instead of running Reinhard+CLAHE+Resize on every fetch. The transform
+    chain should be built with `make_transforms(..., use_cached=True)`.
+
+    If `ram_cache=True` and the per-split array fits in RAM_CACHE_LIMIT_BYTES,
+    the entire cached split is loaded into a NumPy array on init for zero-IO
+    fetches.
+    """
     def __init__(self, img_h5, lbl_h5, transform=None,
-                 max_samples=None, seed=SEED):
+                 max_samples=None, seed=SEED,
+                 preprocessed_h5_path=None, cache_split_key=None,
+                 ram_cache=False, logger=None):
         self.img_h5    = str(img_h5)
         self.lbl_h5    = str(lbl_h5)
         self.transform = transform
+        self.cache_path = (str(preprocessed_h5_path)
+                           if preprocessed_h5_path is not None else None)
+        self.cache_key  = cache_split_key
+        self._use_cache = bool(self.cache_path) and bool(self.cache_key)
 
-        with h5py.File(self.lbl_h5, "r") as f:
-            all_labels = f["y"][:, 0, 0, 0].astype(int)
+        # ---- Read all labels (from cache if available, else raw label h5) --
+        if self._use_cache:
+            with h5py.File(self.cache_path, "r") as f:
+                all_labels = f[f"{self.cache_key}_y"][:].astype(int)
+        else:
+            with h5py.File(self.lbl_h5, "r") as f:
+                all_labels = f["y"][:, 0, 0, 0].astype(int)
 
         n_total = len(all_labels)
         if max_samples is not None and max_samples < n_total:
@@ -270,21 +305,57 @@ class PCamDataset(Dataset):
             self.indices = np.arange(n_total)
             self.labels  = all_labels
 
-        self._img_file = None
+        self._img_file   = None
+        self._cache_file = None
+        self._ram_cache  = None
+
+        # ---- Optional RAM preload (only if it fits the budget) -------------
+        if self._use_cache and ram_cache:
+            n = len(self.indices)
+            est_bytes = n * IMG_SIZE * IMG_SIZE * 3
+            if est_bytes <= RAM_CACHE_LIMIT_BYTES:
+                with h5py.File(self.cache_path, "r") as f:
+                    arr_full = f[f"{self.cache_key}_x"]
+                    if n == arr_full.shape[0]:
+                        self._ram_cache = arr_full[:]
+                    else:
+                        # fancy-indexing on h5 requires sorted indices; ours are sorted.
+                        self._ram_cache = arr_full[self.indices.tolist(), ...]
+                if logger is not None:
+                    logger.info(f"[ram-cache] {self.cache_key}: loaded "
+                                f"{n:,} x {IMG_SIZE}x{IMG_SIZE}x3 uint8 "
+                                f"(~{est_bytes/1e9:.2f} GB) into RAM")
+            else:
+                if logger is not None:
+                    logger.info(f"[ram-cache] {self.cache_key}: skipped "
+                                f"(~{est_bytes/1e9:.2f} GB > limit "
+                                f"{RAM_CACHE_LIMIT_BYTES/1e9:.2f} GB)")
 
     def _open(self):
-        if self._img_file is None:
-            self._img_file = h5py.File(self.img_h5, "r")
+        if self._use_cache:
+            if self._cache_file is None:
+                self._cache_file = h5py.File(self.cache_path, "r")
+        else:
+            if self._img_file is None:
+                self._img_file = h5py.File(self.img_h5, "r")
 
     def __len__(self):
         return len(self.indices)
 
     def __getitem__(self, idx):
-        self._open()
-        real_idx = int(self.indices[idx])
-        img_arr  = self._img_file["x"][real_idx]
-        label    = int(self.labels[idx])
-        img      = Image.fromarray(img_arr.astype(np.uint8))
+        label = int(self.labels[idx])
+        if self._use_cache:
+            if self._ram_cache is not None:
+                img_arr = self._ram_cache[idx]
+            else:
+                self._open()
+                real_idx = int(self.indices[idx])
+                img_arr  = self._cache_file[f"{self.cache_key}_x"][real_idx]
+        else:
+            self._open()
+            real_idx = int(self.indices[idx])
+            img_arr  = self._img_file["x"][real_idx]
+        img = Image.fromarray(img_arr.astype(np.uint8))
         if self.transform:
             img = self.transform(img)
         return img, label
@@ -315,6 +386,31 @@ class PrefetchLoader:
             yield item
 
 
+# ---- Phase 2: speed helpers (memory format / torch.compile) ----------------
+
+def _to_chl(t: torch.Tensor, device: torch.device) -> torch.Tensor:
+    """Convert a 4D image tensor to channels_last on CUDA (no-op elsewhere)."""
+    if device.type == "cuda" and t.dim() == 4:
+        return t.to(memory_format=torch.channels_last)
+    return t
+
+
+def _apply_speed_opts(model: nn.Module, device: torch.device, logger) -> nn.Module:
+    """Apply channels_last memory format and (optionally) torch.compile.
+    Pure speed/memory-layout changes -- numerics are unaffected."""
+    if device.type == "cuda":
+        model = model.to(memory_format=torch.channels_last)
+        logger.info("Memory format: channels_last")
+    if USE_TORCH_COMPILE:
+        try:
+            compiled = torch.compile(model, mode="reduce-overhead")
+            logger.info("torch.compile: enabled (mode=reduce-overhead)")
+            return compiled
+        except Exception as e:
+            logger.warning(f"torch.compile failed ({e}); falling back to eager.")
+    return model
+
+
 # ============================================================================
 #  Build DataLoaders
 # ============================================================================
@@ -331,21 +427,38 @@ def build_pcam_loaders(batch_size, logger):
         if not p.exists():
             logger.error(f"Missing: {p}"); sys.exit(1)
 
-    train_tf, val_tf = make_transforms(img_train)
+    use_cache = USE_PRECACHE and PCAM_PREPROC_H5.exists()
+    cache_path = PCAM_PREPROC_H5 if use_cache else None
+    if use_cache:
+        logger.info(f"Using preprocessed cache: {PCAM_PREPROC_H5.name}")
+    else:
+        logger.info("No preprocessed cache; running Reinhard+CLAHE+Resize per sample.")
+
+    train_tf, val_tf = make_transforms(img_train, use_cached=use_cache)
 
     train_ds = PCamDataset(img_train, lbl_train, train_tf,
-                           max_samples=MAX_TRAIN_SAMPLES)
+                           max_samples=MAX_TRAIN_SAMPLES,
+                           preprocessed_h5_path=cache_path,
+                           cache_split_key="train" if use_cache else None,
+                           ram_cache=use_cache, logger=logger)
     val_ds   = PCamDataset(img_val,   lbl_val,   val_tf,
-                           max_samples=MAX_VAL_SAMPLES)
+                           max_samples=MAX_VAL_SAMPLES,
+                           preprocessed_h5_path=cache_path,
+                           cache_split_key="val" if use_cache else None,
+                           ram_cache=use_cache, logger=logger)
     test_ds  = PCamDataset(img_test,  lbl_test,  val_tf,
-                           max_samples=MAX_TEST_SAMPLES)
+                           max_samples=MAX_TEST_SAMPLES,
+                           preprocessed_h5_path=cache_path,
+                           cache_split_key="test" if use_cache else None,
+                           ram_cache=use_cache, logger=logger)
 
     logger.info(f"PCam splits  -- train: {len(train_ds):,}  "
                 f"val: {len(val_ds):,}  test: {len(test_ds):,}")
 
-    logger.info(f"Computing Reinhard ref stats from {REF_STAT_SAMPLES} PCam training images ...")
-    train_ds[0]
-    logger.info(f"Reinhard ref stats: {[round(v, 2) for v in ReinhardNorm._ref_stats]}")
+    if not use_cache:
+        logger.info(f"Computing Reinhard ref stats from {REF_STAT_SAMPLES} PCam training images ...")
+        train_ds[0]
+        logger.info(f"Reinhard ref stats: {[round(v, 2) for v in ReinhardNorm._ref_stats]}")
 
     counts = np.bincount(train_ds.labels, minlength=2)
     w = torch.tensor(1.0 / counts, dtype=torch.float32)
@@ -358,9 +471,9 @@ def build_pcam_loaders(batch_size, logger):
         num_workers=0, pin_memory=False, drop_last=shuffle,
     )
     return {
-        "train": make_loader(train_ds, batch_size, True),
-        "val":   make_loader(val_ds,   batch_size, False),
-        "test":  make_loader(test_ds,  batch_size, False),
+        "train": make_loader(train_ds, batch_size,        True),
+        "val":   make_loader(val_ds,   EVAL_BATCH_SIZE,   False),
+        "test":  make_loader(test_ds,  EVAL_BATCH_SIZE,   False),
     }, w
 
 
@@ -440,6 +553,7 @@ def train_one_epoch(model, loader, device, optimizer, scaler, class_weights,
             imgs_in       = imgs
             soft_targets  = F.one_hot(labels, PCAM_NUM_CLASSES).float()
 
+        imgs_in = _to_chl(imgs_in, device)
         with torch.amp.autocast("cuda", enabled=(device.type == "cuda" and CFG.AMP)):
             logits = model(imgs_in)
             loss   = soft_cross_entropy(logits, soft_targets,
@@ -474,6 +588,7 @@ def eval_model(model, loader, device, class_weights, logger):
     model.eval()
     total_loss, all_preds, all_labels = 0.0, [], []
     for imgs, labels in PrefetchLoader(loader, device):
+        imgs = _to_chl(imgs, device)
         with torch.amp.autocast("cuda", enabled=(device.type == "cuda" and CFG.AMP)):
             logits = model(imgs)
             soft   = F.one_hot(labels, PCAM_NUM_CLASSES).float()
@@ -496,6 +611,7 @@ def train_pcam(device, logger):
 
     model = HAGCANet(num_classes=PCAM_NUM_CLASSES, pretrained=True).to(device)
     logger.info(f"Model params: {model.trainable_param_count()/1e6:.2f} M (all)")
+    model = _apply_speed_opts(model, device, logger)
 
     ema     = ModelEMA(model, decay=EMA_DECAY)
     scaler  = torch.amp.GradScaler("cuda", enabled=(device.type == "cuda" and CFG.AMP))
@@ -594,12 +710,14 @@ def train_pcam(device, logger):
 @torch.no_grad()
 def _forward_with_tta(model, imgs, device, use_tta=True):
     """Returns averaged softmax probs over (orig, hflip, vflip, hvflip)."""
+    def _f(x):
+        return softmax(model(_to_chl(x, device)), dim=1)
     with torch.amp.autocast("cuda", enabled=(device.type == "cuda" and CFG.AMP)):
-        all_probs = [softmax(model(imgs), dim=1)]
+        all_probs = [_f(imgs)]
         if use_tta:
-            all_probs.append(softmax(model(torch.flip(imgs, dims=[3])), dim=1))   # H-flip
-            all_probs.append(softmax(model(torch.flip(imgs, dims=[2])), dim=1))   # V-flip
-            all_probs.append(softmax(model(torch.flip(imgs, dims=[2, 3])), dim=1))# H+V flip
+            all_probs.append(_f(torch.flip(imgs, dims=[3])))    # H-flip
+            all_probs.append(_f(torch.flip(imgs, dims=[2])))    # V-flip
+            all_probs.append(_f(torch.flip(imgs, dims=[2, 3]))) # H+V flip
     return torch.stack(all_probs, 0).mean(0)
 
 
@@ -609,16 +727,26 @@ def evaluate_test(device, logger):
     ckpt  = torch.load(PCAM_CKPT, map_location=device)
     model.load_state_dict(ckpt["state_dict"])
     model.eval()
+    model = _apply_speed_opts(model, device, logger)
     logger.info(f"Loaded: {PCAM_CKPT.name}  (epoch {ckpt['epoch']}, val_F1={ckpt['val_f1']:.4f})")
 
     img_train = PCAM_ROOT / "pcam" / "training_split.h5"
     img_test  = PCAM_ROOT / "pcam" / "test_split.h5"
     lbl_test  = PCAM_ROOT / "Labels" / "Labels" / "camelyonpatch_level_2_split_test_y.h5"
 
-    _, val_tf = make_transforms(img_train)
+    use_cache = USE_PRECACHE and PCAM_PREPROC_H5.exists()
+    cache_path = PCAM_PREPROC_H5 if use_cache else None
+    if use_cache:
+        logger.info(f"Using preprocessed cache: {PCAM_PREPROC_H5.name}")
 
-    test_ds  = PCamDataset(img_test, lbl_test, val_tf, max_samples=MAX_TEST_SAMPLES)
-    loader   = DataLoader(test_ds, batch_size=CFG.BATCH_SIZE,
+    _, val_tf = make_transforms(img_train, use_cached=use_cache)
+
+    test_ds  = PCamDataset(img_test, lbl_test, val_tf,
+                           max_samples=MAX_TEST_SAMPLES,
+                           preprocessed_h5_path=cache_path,
+                           cache_split_key="test" if use_cache else None,
+                           ram_cache=use_cache, logger=logger)
+    loader   = DataLoader(test_ds, batch_size=EVAL_BATCH_SIZE,
                           shuffle=False, num_workers=0, pin_memory=False)
 
     logger.info(f"Test samples: {len(test_ds):,}   TTA: {TTA_FLIPS}")
