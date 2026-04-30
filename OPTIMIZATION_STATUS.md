@@ -8,7 +8,7 @@ last_metrics:
   f1_binary: 0.8870
   roc_auc: 0.9732
   chosen_threshold: 0.5
-last_commit_sha: PHASE2_PLACEHOLDER
+last_commit_sha: 6b5d06471d2081da50e79140035c9990abb64c27
 last_commit_tag: phase-2-complete
 timestamp: 2026-04-29T20:25:00+05:30
 notes: Phase 2 complete; 1-sample CUDA-determinism drift accepted via Option C. Smoke-train skipped per user.
