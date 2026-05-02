@@ -91,14 +91,14 @@ MAX_TEST_SAMPLES  = None      # None = full 32,768  (always evaluate all)
 
 # ---- Two-phase schedule -----------------------------------------------------
 PHASE1_EPOCHS     = 3         # frozen backbones (warmup of head + novel modules)
-PHASE2_EPOCHS     = 15        # full fine-tune
+PHASE2_EPOCHS     = 18        # full fine-tune
 WARMUP_EPOCHS     = 1         # linear LR warmup at the start of each phase
 PHASE1_BS         = 32
 PHASE2_BS         = 16
 LR1               = 2e-4
 LR2               = 5e-5
 WEIGHT_DECAY      = 1e-4
-EARLY_STOP        = 6         # patience (epochs of no val-F1 improvement)
+EARLY_STOP        = 8         # patience (epochs of no val-F1 improvement)
 GRAD_CLIP         = 1.0       # clip grad-norm
 
 # ---- Regularization ---------------------------------------------------------
