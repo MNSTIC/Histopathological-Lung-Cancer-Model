@@ -1,6 +1,6 @@
 =================================================================
   HAGCA-Net — THREE-SCENARIO COMPARISON
-  Generated: 2026-04-28 19:13:42
+  Generated: 2026-05-02 13:05:32
 =================================================================
 
   SCENARIOS
@@ -12,11 +12,11 @@
 =================================================================
   Metric                S1 (LC->LC)  S2 (LC->PCam)  S3 (PCam->PCam)
   ---------------------------------------------------------------
-  Accuracy                   0.9991 *        0.5754           0.8969  
-  F1 (task)                  0.9991 *        0.6861           0.8870  
-  ROC-AUC                    1.0000 *        0.5987           0.9732  
-  Precision                  0.9991 *        0.5441           0.9805  
-  Recall                     0.9991 *        0.9286           0.8097  
+  Accuracy                   0.9991 *        0.5754           0.9232  
+  F1 (task)                  0.9991 *        0.6861           0.9205  
+  ROC-AUC                    1.0000 *        0.5987           0.9765  
+  Precision                  0.9991 *        0.5441           0.9525  
+  Recall                     0.9991 *        0.9286           0.8906  
 
   * = best value in row
 
@@ -33,8 +33,8 @@
      However precision is limited due to severe domain shift.
 
   3. S3 (in-domain PCam): Fine-tuning on PCam data substantially
-     improves precision (from 0.5441 to 0.9805)
-     and overall accuracy (from 57.54% to 89.69%),
+     improves precision (from 0.5441 to 0.9525)
+     and overall accuracy (from 57.54% to 92.32%),
      confirming that domain-specific training is critical for
      high-precision deployment in a new tissue type.
 

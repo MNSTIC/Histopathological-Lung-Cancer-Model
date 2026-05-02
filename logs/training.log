@@ -2363,3 +2363,160 @@ Next: python src\14_compare_scenarios.py  (or: python main.py)
 2026-04-28 19:13:42 | INFO | 
 Pipeline complete! All 14 steps done.
 2026-04-28 19:13:42 | INFO | See results/summary/scenario_comparison.txt for the full comparison.
+2026-05-02 01:29:34 | INFO | ============================================================
+2026-05-02 01:29:34 | INFO |   STEP 14: THREE-SCENARIO COMPARISON
+2026-05-02 01:29:34 | INFO | ============================================================
+2026-05-02 01:29:34 | INFO | All three scenario metric files loaded.
+2026-05-02 01:29:35 | INFO | Text report saved: C:\ml_project\results\summary\scenario_comparison.txt
+2026-05-02 01:29:35 | INFO | JSON saved: C:\ml_project\results\summary\scenario_comparison.json
+2026-05-02 01:29:35 | INFO | 
+Pipeline complete! All 14 steps done.
+2026-05-02 01:29:35 | INFO | See results/summary/scenario_comparison.txt for the full comparison.
+2026-05-02 01:39:31 | INFO | ============================================================
+2026-05-02 01:39:31 | INFO |   STEP 14: THREE-SCENARIO COMPARISON
+2026-05-02 01:39:31 | INFO | ============================================================
+2026-05-02 01:39:31 | INFO | All three scenario metric files loaded.
+2026-05-02 01:39:32 | INFO | Text report saved: C:\ml_project\results\summary\scenario_comparison.txt
+2026-05-02 01:39:32 | INFO | JSON saved: C:\ml_project\results\summary\scenario_comparison.json
+2026-05-02 01:39:32 | INFO | 
+Pipeline complete! All 14 steps done.
+2026-05-02 01:39:32 | INFO | See results/summary/scenario_comparison.txt for the full comparison.
+2026-05-02 01:39:54 | INFO | ============================================================
+2026-05-02 01:39:54 | INFO |   STEP 14: THREE-SCENARIO COMPARISON
+2026-05-02 01:39:54 | INFO | ============================================================
+2026-05-02 01:39:54 | INFO | All three scenario metric files loaded.
+2026-05-02 01:39:55 | INFO | Text report saved: C:\ml_project\results\summary\scenario_comparison.txt
+2026-05-02 01:39:55 | INFO | JSON saved: C:\ml_project\results\summary\scenario_comparison.json
+2026-05-02 01:39:55 | INFO | 
+Pipeline complete! All 14 steps done.
+2026-05-02 01:39:55 | INFO | See results/summary/scenario_comparison.txt for the full comparison.
+2026-05-02 12:28:49 | INFO | ============================================================
+2026-05-02 12:28:49 | INFO |   STEP 14: THREE-SCENARIO COMPARISON
+2026-05-02 12:28:49 | INFO | ============================================================
+2026-05-02 12:28:49 | INFO | All three scenario metric files loaded.
+2026-05-02 12:28:50 | INFO | Text report saved: C:\ml_project\results\summary\scenario_comparison.txt
+2026-05-02 12:28:50 | INFO | JSON saved: C:\ml_project\results\summary\scenario_comparison.json
+2026-05-02 12:28:50 | INFO | 
+Pipeline complete! All 14 steps done.
+2026-05-02 12:28:50 | INFO | See results/summary/scenario_comparison.txt for the full comparison.
+2026-05-02 12:33:45 | INFO | ============================================================
+2026-05-02 12:33:45 | INFO |   STEP 14: THREE-SCENARIO COMPARISON
+2026-05-02 12:33:45 | INFO | ============================================================
+2026-05-02 12:33:45 | INFO | All three scenario metric files loaded.
+2026-05-02 12:33:46 | INFO | Text report saved: C:\ml_project\results\summary\scenario_comparison.txt
+2026-05-02 12:33:46 | INFO | JSON saved: C:\ml_project\results\summary\scenario_comparison.json
+2026-05-02 12:33:46 | INFO | 
+Pipeline complete! All 14 steps done.
+2026-05-02 12:33:46 | INFO | See results/summary/scenario_comparison.txt for the full comparison.
+2026-05-02 12:39:27 | INFO | ============================================================
+2026-05-02 12:39:27 | INFO |   PHASE 1: post-hoc threshold tuning + 8-aug TTA
+2026-05-02 12:39:27 | INFO | ============================================================
+2026-05-02 12:39:27 | INFO | Val samples : 16,384
+2026-05-02 12:39:27 | INFO | Test samples: 32,768
+2026-05-02 12:39:28 | INFO | Loading checkpoint: hagcanet_pcam_best.pth
+2026-05-02 12:39:30 | INFO |   epoch=4  ckpt_val_F1=0.8967
+2026-05-02 12:39:30 | INFO | Collecting val probs (8-aug TTA) ...
+2026-05-02 12:40:14 | INFO |   [val] batch 50/1024  (44s)
+2026-05-02 12:40:36 | INFO |   [val] batch 100/1024  (66s)
+2026-05-02 12:40:57 | INFO |   [val] batch 150/1024  (87s)
+2026-05-02 12:41:18 | INFO |   [val] batch 200/1024  (108s)
+2026-05-02 12:41:40 | INFO |   [val] batch 250/1024  (130s)
+2026-05-02 12:42:02 | INFO |   [val] batch 300/1024  (152s)
+2026-05-02 12:42:24 | INFO |   [val] batch 350/1024  (174s)
+2026-05-02 12:42:46 | INFO |   [val] batch 400/1024  (196s)
+2026-05-02 12:43:08 | INFO |   [val] batch 450/1024  (218s)
+2026-05-02 12:43:32 | INFO |   [val] batch 500/1024  (242s)
+2026-05-02 12:43:56 | INFO |   [val] batch 550/1024  (267s)
+2026-05-02 12:44:21 | INFO |   [val] batch 600/1024  (291s)
+2026-05-02 12:44:45 | INFO |   [val] batch 650/1024  (315s)
+2026-05-02 12:45:10 | INFO |   [val] batch 700/1024  (340s)
+2026-05-02 12:45:34 | INFO |   [val] batch 750/1024  (364s)
+2026-05-02 12:45:59 | INFO |   [val] batch 800/1024  (389s)
+2026-05-02 12:46:24 | INFO |   [val] batch 850/1024  (414s)
+2026-05-02 12:46:48 | INFO |   [val] batch 900/1024  (438s)
+2026-05-02 12:47:12 | INFO |   [val] batch 950/1024  (462s)
+2026-05-02 12:47:36 | INFO |   [val] batch 1000/1024  (486s)
+2026-05-02 12:47:48 | INFO |   [val] batch 1024/1024  (498s)
+2026-05-02 12:47:48 | INFO | Sweeping threshold on val set ...
+2026-05-02 12:47:48 | INFO | Best val tau* = 0.20  (val F1 = 0.9126)
+2026-05-02 12:47:48 | INFO | Collecting test probs (8-aug TTA) ...
+2026-05-02 12:48:13 | INFO |   [test] batch 50/2048  (24s)
+2026-05-02 12:48:37 | INFO |   [test] batch 100/2048  (49s)
+2026-05-02 12:49:01 | INFO |   [test] batch 150/2048  (73s)
+2026-05-02 12:49:25 | INFO |   [test] batch 200/2048  (97s)
+2026-05-02 12:49:50 | INFO |   [test] batch 250/2048  (121s)
+2026-05-02 12:50:14 | INFO |   [test] batch 300/2048  (145s)
+2026-05-02 12:50:38 | INFO |   [test] batch 350/2048  (169s)
+2026-05-02 12:51:02 | INFO |   [test] batch 400/2048  (194s)
+2026-05-02 12:51:26 | INFO |   [test] batch 450/2048  (218s)
+2026-05-02 12:51:50 | INFO |   [test] batch 500/2048  (242s)
+2026-05-02 12:52:15 | INFO |   [test] batch 550/2048  (266s)
+2026-05-02 12:52:39 | INFO |   [test] batch 600/2048  (291s)
+2026-05-02 12:53:03 | INFO |   [test] batch 650/2048  (315s)
+2026-05-02 12:53:27 | INFO |   [test] batch 700/2048  (339s)
+2026-05-02 12:53:51 | INFO |   [test] batch 750/2048  (363s)
+2026-05-02 12:54:16 | INFO |   [test] batch 800/2048  (387s)
+2026-05-02 12:54:40 | INFO |   [test] batch 850/2048  (411s)
+2026-05-02 12:55:04 | INFO |   [test] batch 900/2048  (436s)
+2026-05-02 12:55:28 | INFO |   [test] batch 950/2048  (460s)
+2026-05-02 12:55:53 | INFO |   [test] batch 1000/2048  (484s)
+2026-05-02 12:56:17 | INFO |   [test] batch 1050/2048  (508s)
+2026-05-02 12:56:41 | INFO |   [test] batch 1100/2048  (532s)
+2026-05-02 12:57:05 | INFO |   [test] batch 1150/2048  (557s)
+2026-05-02 12:57:29 | INFO |   [test] batch 1200/2048  (581s)
+2026-05-02 12:57:54 | INFO |   [test] batch 1250/2048  (605s)
+2026-05-02 12:58:18 | INFO |   [test] batch 1300/2048  (629s)
+2026-05-02 12:58:42 | INFO |   [test] batch 1350/2048  (654s)
+2026-05-02 12:59:06 | INFO |   [test] batch 1400/2048  (678s)
+2026-05-02 12:59:30 | INFO |   [test] batch 1450/2048  (702s)
+2026-05-02 12:59:55 | INFO |   [test] batch 1500/2048  (726s)
+2026-05-02 13:00:19 | INFO |   [test] batch 1550/2048  (751s)
+2026-05-02 13:00:43 | INFO |   [test] batch 1600/2048  (775s)
+2026-05-02 13:01:08 | INFO |   [test] batch 1650/2048  (799s)
+2026-05-02 13:01:32 | INFO |   [test] batch 1700/2048  (824s)
+2026-05-02 13:01:56 | INFO |   [test] batch 1750/2048  (848s)
+2026-05-02 13:02:20 | INFO |   [test] batch 1800/2048  (872s)
+2026-05-02 13:02:45 | INFO |   [test] batch 1850/2048  (896s)
+2026-05-02 13:03:09 | INFO |   [test] batch 1900/2048  (921s)
+2026-05-02 13:03:33 | INFO |   [test] batch 1950/2048  (945s)
+2026-05-02 13:03:58 | INFO |   [test] batch 2000/2048  (969s)
+2026-05-02 13:04:21 | INFO |   [test] batch 2048/2048  (993s)
+2026-05-02 13:04:21 | INFO | Saved: C:\ml_project\results\metrics\pcam_train_test_metrics_threshold.json
+2026-05-02 13:04:21 | INFO | Saved: C:\ml_project\results\metrics\pcam_threshold_sweep.json
+2026-05-02 13:04:21 | INFO | Saved: C:\ml_project\results\plots\pcam_threshold_sweep.png
+2026-05-02 13:04:22 | INFO | Saved: C:\ml_project\results\plots\pcam_confusion_matrix_tuned.png
+2026-05-02 13:04:22 | INFO | 
+========================================================================
+2026-05-02 13:04:22 | INFO |   PHASE 1 SIDE-BY-SIDE  (baseline vs tuned)
+2026-05-02 13:04:22 | INFO | ========================================================================
+2026-05-02 13:04:22 | INFO |   Metric     |   Baseline (tau=0.5, 4-flip) |    Tuned (tau*, 8-aug) |    Delta
+2026-05-02 13:04:22 | INFO |   -----------------------------------------------------------------------------
+2026-05-02 13:04:22 | INFO |   Accuracy   |                       0.8969 |                 0.9232 |  +0.0263
+2026-05-02 13:04:22 | INFO |   Precision  |                       0.9805 |                 0.9525 |  -0.0280
+2026-05-02 13:04:22 | INFO |   Recall     |                       0.8097 |                 0.8906 |  +0.0809
+2026-05-02 13:04:22 | INFO |   F1         |                       0.8870 |                 0.9205 |  +0.0335
+2026-05-02 13:04:22 | INFO |   ROC-AUC    |                       0.9732 |                 0.9765 |  +0.0033
+2026-05-02 13:04:22 | INFO | ========================================================================
+2026-05-02 13:04:22 | INFO |   chosen_threshold = 0.20   (default was 0.5)
+2026-05-02 13:04:22 | INFO |   TTA              = 8-aug (was 4-flip)
+2026-05-02 13:04:22 | INFO | ========================================================================
+2026-05-02 13:04:22 | INFO | 
+Classification report (tuned tau, test set):
+              precision    recall  f1-score   support
+
+      normal     0.8974    0.9556    0.9256     16391
+       tumor     0.9525    0.8906    0.9205     16377
+
+    accuracy                         0.9232     32768
+   macro avg     0.9250    0.9231    0.9231     32768
+weighted avg     0.9249    0.9232    0.9231     32768
+
+2026-05-02 13:05:31 | INFO | ============================================================
+2026-05-02 13:05:31 | INFO |   STEP 14: THREE-SCENARIO COMPARISON
+2026-05-02 13:05:31 | INFO | ============================================================
+2026-05-02 13:05:31 | INFO | All three scenario metric files loaded.
+2026-05-02 13:05:32 | INFO | Text report saved: C:\ml_project\results\summary\scenario_comparison.txt
+2026-05-02 13:05:32 | INFO | JSON saved: C:\ml_project\results\summary\scenario_comparison.json
+2026-05-02 13:05:32 | INFO | 
+Pipeline complete! All 14 steps done.
+2026-05-02 13:05:32 | INFO | See results/summary/scenario_comparison.txt for the full comparison.

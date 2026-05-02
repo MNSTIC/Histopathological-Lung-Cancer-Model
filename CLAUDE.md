@@ -330,3 +330,66 @@ or hyperparameters.
 **Next:** User re-launches Phase 3 retrain. Expected ~12-20 min/epoch x 18
 epochs ~= 4-6 hours total (matches the original Session 7 scaling for
 130K -> 262K samples).
+
+### Session 8 (cont.) - 2026-05-02 - Phase 3 (Full-data retrain post-processing)
+
+**Work Done:**
+- Confirmed Case A on Step 0: user had launched the full-data retrain
+  outside of Claude between Apr 30 and May 1; ckpt mtime May 1 04:34 is
+  newer than the phase-2-complete tag commit (Apr 30 14:12). Two protocol
+  preparation steps were skipped before that run:
+  - Step 1 constants edit (MAX_TRAIN_SAMPLES=None, PHASE2_EPOCHS=18,
+    EARLY_STOP=8) was NOT done. Retrain ran on full 262K samples but
+    with the post-Phase-2 defaults (3 warmup + 15 main epochs, EARLY_STOP=6).
+  - Step 2 backup (hagcanet_pcam_best_pre_full_run.pth) was skipped.
+- Retroactive backup: copied checkpoints/hagcanet_pcam_baseline.pth
+  (Phase 0) -> checkpoints/hagcanet_pcam_best_pre_full_run.pth so the
+  safety net is in place. The Phase 0 ckpt is the appropriate
+  "pre-full-run" snapshot since it's what existed before the May 1 retrain.
+- Ran src/13b_threshold_tta.py on the new ckpt (hagcanet_pcam_best.pth,
+  best_epoch=4 per checkpoint state, val_f1=0.8967). Wall time: ~25 min.
+  Val sweep selected tau* = 0.20 (val F1 = 0.9126 with 8-aug TTA).
+- Updated results/metrics/pcam_train_test_metrics.json with the
+  threshold-tuned numbers (replacing the stale Phase-0 baseline values
+  that were still in the file).
+- Ran src/14_compare_scenarios.py to refresh the three-scenario summary.
+
+**Phase 3 Metrics (final tuned, tau=0.20, 8-aug TTA):**
+| Metric    | Phase 0 baseline | Phase 1 (old ckpt + tune) | Phase 3 (new ckpt + tune) | Δ vs P0 | Δ vs P1 |
+|-----------|------------------|---------------------------|---------------------------|---------|---------|
+| Accuracy  | 0.8969           | 0.9166                    | 0.9232                    | +0.0263 | +0.0066 |
+| Precision | 0.9805           | 0.9547                    | 0.9525                    | -0.0280 | -0.0022 |
+| Recall    | 0.8097           | 0.8745                    | 0.8906                    | +0.0809 | +0.0161 |
+| F1        | 0.8870           | 0.9129                    | 0.9205                    | +0.0335 | +0.0076 |
+| ROC-AUC   | 0.9732           | 0.9735                    | 0.9765                    | +0.0033 | +0.0030 |
+
+**Outcome categorization:** Final acc 0.9232 falls below the 0.96
+publication-grade band, but the new model is genuinely better than both
+the Phase 0 untuned baseline AND the Phase 1 tuned-on-old-checkpoint
+result on every metric except precision (which trades down for recall, as
+expected when tau drops from 0.5 to 0.20). **Not a true regression** —
+backup not restored. Hypothesis for not reaching ≥0.96: the retrain ran
+with only 3+15=18 max epochs and EARLY_STOP=6 (not the prescribed
+PHASE2_EPOCHS=18 + EARLY_STOP=8 = 26 max). Best_epoch landed at epoch 4,
+which strongly suggests early-stopping fired before the model fully
+converged. A future Phase 3.1 with the prescribed settings could close
+the gap to the 0.96 target.
+
+**Files Created/Modified:**
+- C:\ml_project\checkpoints\hagcanet_pcam_best_pre_full_run.pth (new,
+  retroactive copy of Phase 0 baseline)
+- C:\ml_project\results\metrics\pcam_train_test_metrics_threshold.json
+  (overwritten by 13b_threshold_tta.py with Phase 3 tuned numbers)
+- C:\ml_project\results\metrics\pcam_threshold_sweep.json (overwritten)
+- C:\ml_project\results\plots\pcam_threshold_sweep.png (overwritten)
+- C:\ml_project\results\plots\pcam_confusion_matrix_tuned.png (overwritten)
+- C:\ml_project\results\metrics\pcam_train_test_metrics.json (updated to
+  Phase 3 tuned numbers; previously held stale Phase 0 baseline)
+- C:\ml_project\results\summary\scenario_comparison.txt (refreshed)
+- C:\ml_project\results\summary\scenario_comparison.json (refreshed)
+- C:\ml_project\results\plots\scenario_comparison.png (refreshed)
+- C:\ml_project\OPTIMIZATION_STATUS.md (updated)
+- C:\ml_project\CLAUDE.md (this entry)
+
+**Next:** Phase 4 (documentation pass) — gated on user confirmation.
+
