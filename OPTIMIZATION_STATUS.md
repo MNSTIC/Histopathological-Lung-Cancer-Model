@@ -8,7 +8,7 @@ last_metrics:
   f1_binary: 0.9205
   roc_auc: 0.9765
   chosen_threshold: 0.20
-last_commit_sha: TBD
+last_commit_sha: 46d5c64cd8bb4e7e4e9b20e5156712b94cd89adf
 last_commit_tag: phase-3-complete
 timestamp: 2026-05-02T13:10:00+05:30
 notes: "Phase 3 complete. Full-data retrain (262K samples) + post-hoc threshold tuning + 8-aug TTA. Final tuned acc 0.9232 (below 0.96 publication-grade target but better than Phase 0 baseline and Phase 1 tuned-on-old-ckpt on every primary metric). Not a regression vs backup; backup not restored."
