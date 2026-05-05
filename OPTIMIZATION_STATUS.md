@@ -1,6 +1,8 @@
 ---
 last_phase_completed: 3
-next_phase: 4
+partial_phase_4: true
+phase_4_files_documented: [config.py, 01_data_cleaning.py, 02_data_splitting.py, 03_preprocessing.py]
+next_phase: 5
 last_metrics:
   accuracy: 0.9232
   precision: 0.9525
@@ -15,6 +17,7 @@ notes: "Phase 3 complete. Full-data retrain (262K samples) + post-hoc threshold 
 phase3_provenance: "Retrained on full 262K with PHASE2_EPOCHS=15, EARLY_STOP=6 (the v2 defaults at the time of the May 1 retrain). The prescribed Phase 3 constants edit (PHASE2_EPOCHS=18, EARLY_STOP=8) was skipped before launch and is queued post-tag for any future Phase 3.x retrain. Effective config at training time: 3 warmup + 15 main epochs, EARLY_STOP=6. Pre-tuning metrics: Acc 0.9063, F1 0.8989, AUC 0.9764. Best_epoch=4 in new ckpt — early-stopping likely fired before full convergence. Accepted as Phase 3 baseline. A future Phase 3.1 with prescribed settings (26 max epochs, EARLY_STOP=8) could close the gap to ≥0.96."
 baseline_provenance: v2_run_session_7_early_stopped_at_epoch_7_total_13_epochs_run_accepted_via_override
 behavioral_drift_notes: "Phase 2 introduces 1-sample (1/32768) precision/recall drift of ±0.0001 vs baseline at default τ=0.5. AUC, F1, accuracy unchanged at 4dp. Cause: cuDNN kernel selection under channels_last + EVAL_BATCH_SIZE=64 + FP16 AMP. Below natural CUDA non-determinism; accepted via Option C."
+phase_4_disposition: "Abandoned mid-pass; sufficient for paper repo, will not return to it. Header docstrings present for config.py + 01/02/03; remaining src/*.py files retain their original (sparser) docstrings. No README, no type-hint pass."
 ---
 
 # HAGCA-Net Optimization Status

@@ -393,3 +393,17 @@ the gap to the 0.96 target.
 
 **Next:** Phase 4 (documentation pass) — gated on user confirmation.
 
+
+---
+
+### Session - 2026-05-05 (Phase 4 closeout)
+
+**Phase 4 partial / abandoned.** Header docstrings present for
+config.py, 01_data_cleaning.py, 02_data_splitting.py, 03_preprocessing.py
+(these were already in place and survive as the documented surface).
+Abandoned to prioritize Phase 5 and conserve token budget. Remaining
+src/*.py files retain their original (sparser) header docstrings. No
+README, no full type-hint pass. Will not return to it.
+
+**Next:** Phase 5 — S2 zero-shot optimization (LC25000→PCam, no PCam
+training, no PCam test labels). Deliverable: src/10b_cross_dataset_optimized.py.
