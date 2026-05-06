@@ -23,7 +23,7 @@ last_metrics:
   s2_best_single_config: off_tta
   s2_best_single_accuracy: 0.6212
   s2_best_single_delta_vs_baseline_accuracy: 0.0459
-last_commit_sha: TBD
+last_commit_sha: 2014cb65db2a2bc71e151576b5c51ad34c112948
 last_commit_tag: phase-5-complete
 timestamp: 2026-05-06T11:55:00+05:30
 notes: "Phase 5 complete. Discovered + fixed an FP16 softmax precision bug in src/10_cross_dataset.py during the 10b sanity check; corrected baseline AUC 0.5987 → 0.6851 (+0.0864). Discrete metrics unchanged. Phase 5 flag ablation against the corrected baseline shows LC25000 stain normalization is the only flag with a positive contribution (+0.0224 acc); probability mapping, 8-aug TTA, and threshold tuning each marginally hurt. Best total Δacc = +0.0408 (all_on) or +0.0459 (off_tta) — under the 0.05 publication-grade threshold, so cross_dataset_metrics.json was NOT overwritten with optimized numbers."
