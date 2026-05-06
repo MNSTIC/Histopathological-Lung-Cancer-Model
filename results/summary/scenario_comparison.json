@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-02T13:05:32.496945",
+  "generated": "2026-05-06T10:34:01.435427",
   "scenarios": [
     {
       "label": "S1: LC25000 \u2192 LC25000",
@@ -21,10 +21,10 @@
       "test_data": "PatchCamelyon (lymph node)",
       "n_test": 32768,
       "task": "Binary (normal / tumor)",
-      "accuracy": 0.5754,
+      "accuracy": 0.5753,
       "f1": 0.6861,
-      "roc_auc": 0.5987,
-      "precision": 0.5441,
+      "roc_auc": 0.6851,
+      "precision": 0.544,
       "recall": 0.9286,
       "f1_label": "F1-binary",
       "domain_shift": true

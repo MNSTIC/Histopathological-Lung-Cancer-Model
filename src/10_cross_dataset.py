@@ -180,6 +180,7 @@ def logits_to_binary(logits):
       bin_preds  : (B,) int64  binary predictions  (0 or 1)
       cancer_prob: (B,) float  probability of cancer (max of lung_aca + lung_scc probs)
     """
+    logits     = logits.float()                    # FP32 softmax (Phase 5 fix; FP16 was depressing AUC)
     probs      = softmax(logits, dim=1)            # (B, 3)
     # Cancer prob = sum of aca + scc softmax scores
     cancer_prob = (probs[:, 0] + probs[:, 2]).cpu().numpy()   # (B,)

@@ -1,0 +1,143 @@
+{
+  "scenario": "S2_LC25000_to_PCam_zero_shot_flag_ablation",
+  "phase": 5,
+  "primary": {
+    "config": "all_on",
+    "flags": {
+      "stain": true,
+      "prob": true,
+      "tta": true,
+      "thresh": true,
+      "bn": false
+    },
+    "chosen_threshold": 0.87,
+    "accuracy": 0.6161,
+    "precision": 0.5808,
+    "recall": 0.8332,
+    "f1_binary": 0.6845,
+    "roc_auc": 0.6706,
+    "n_test": 32768
+  },
+  "configs": {
+    "all_on": {
+      "config": "all_on",
+      "flags": {
+        "stain": true,
+        "prob": true,
+        "tta": true,
+        "thresh": true,
+        "bn": false
+      },
+      "chosen_threshold": 0.87,
+      "accuracy": 0.6161,
+      "precision": 0.5808,
+      "recall": 0.8332,
+      "f1_binary": 0.6845,
+      "roc_auc": 0.6706,
+      "n_test": 32768
+    },
+    "all_off": {
+      "config": "all_off",
+      "flags": {
+        "stain": false,
+        "prob": false,
+        "tta": false,
+        "thresh": false,
+        "bn": false
+      },
+      "chosen_threshold": 0.5,
+      "accuracy": 0.5753,
+      "precision": 0.544,
+      "recall": 0.9286,
+      "f1_binary": 0.6861,
+      "roc_auc": 0.6851,
+      "n_test": 32768
+    },
+    "off_stain": {
+      "config": "off_stain",
+      "flags": {
+        "stain": false,
+        "prob": true,
+        "tta": true,
+        "thresh": true,
+        "bn": false
+      },
+      "chosen_threshold": 0.95,
+      "accuracy": 0.5937,
+      "precision": 0.5609,
+      "recall": 0.8616,
+      "f1_binary": 0.6795,
+      "roc_auc": 0.6832,
+      "n_test": 32768
+    },
+    "off_prob": {
+      "config": "off_prob",
+      "flags": {
+        "stain": true,
+        "prob": false,
+        "tta": true,
+        "thresh": true,
+        "bn": false
+      },
+      "chosen_threshold": 0.5,
+      "accuracy": 0.6182,
+      "precision": 0.5765,
+      "recall": 0.8895,
+      "f1_binary": 0.6996,
+      "roc_auc": 0.6706,
+      "n_test": 32768
+    },
+    "off_tta": {
+      "config": "off_tta",
+      "flags": {
+        "stain": true,
+        "prob": true,
+        "tta": false,
+        "thresh": true,
+        "bn": false
+      },
+      "chosen_threshold": 0.95,
+      "accuracy": 0.6212,
+      "precision": 0.5799,
+      "recall": 0.8785,
+      "f1_binary": 0.6986,
+      "roc_auc": 0.6806,
+      "n_test": 32768
+    },
+    "off_thresh": {
+      "config": "off_thresh",
+      "flags": {
+        "stain": true,
+        "prob": true,
+        "tta": true,
+        "thresh": false,
+        "bn": false
+      },
+      "chosen_threshold": 0.5,
+      "accuracy": 0.6175,
+      "precision": 0.5758,
+      "recall": 0.8915,
+      "f1_binary": 0.6997,
+      "roc_auc": 0.6706,
+      "n_test": 32768
+    }
+  },
+  "ranking_by_accuracy_drop_when_off": [
+    [
+      "stain",
+      0.0224
+    ],
+    [
+      "thresh",
+      -0.0014
+    ],
+    [
+      "prob",
+      -0.0021
+    ],
+    [
+      "tta",
+      -0.0051
+    ]
+  ]
+}

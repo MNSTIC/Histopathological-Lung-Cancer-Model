@@ -407,3 +407,185 @@ README, no full type-hint pass. Will not return to it.
 
 **Next:** Phase 5 — S2 zero-shot optimization (LC25000→PCam, no PCam
 training, no PCam test labels). Deliverable: src/10b_cross_dataset_optimized.py.
+
+---
+
+### Session 9 — 2026-05-06 — **★ S2 FP16 SOFTMAX BUG FIX (paper-relevant correction) ★**
+
+**This is the most important note in the optimization log.** A latent
+numerical-precision bug in `src/10_cross_dataset.py` was producing an
+artificially-deflated cross-dataset AUC. Discovered while running the
+Phase 5 sanity check; fixed with a single-line change.
+
+#### What the bug was
+
+`logits_to_binary` in `src/10_cross_dataset.py` computed:
+
+```python
+with torch.amp.autocast("cuda", enabled=...):
+    logits = model(imgs)            # logits exit autocast as FP16
+bin_preds, cancer_prob = logits_to_binary(logits)
+
+def logits_to_binary(logits):
+    probs = softmax(logits, dim=1)  # softmax of FP16 logits → FP16 probs
+    cancer_prob = (probs[:, 0] + probs[:, 2]).cpu().numpy()
+    ...
+```
+
+`torch.amp.autocast` only forces softmax to FP32 *inside* the autocast
+block. Calling softmax outside autocast on FP16 logits runs in FP16,
+which quantizes near-extreme values (probs ≈ 0 or 1) and destroys
+fine-grained ranking information. Argmax-based metrics (acc, prec,
+rec, F1) are unaffected because argmax is order-preserving across
+dtype precision. ROC-AUC is a *continuous* ranking metric and was
+artificially depressed by ~0.09.
+
+#### Why argmax-based metrics were unaffected
+
+For any monotonic dtype conversion (FP16 ⇄ FP32) on the same logits,
+`argmax(logits)` returns the same index. So `acc`, `prec`, `rec`, `F1`
+— all computed from the binary prediction `argmax != lung_n` — are
+identical to 4dp regardless of which dtype the softmax used. Only
+ROC-AUC, which scores the continuous ranking of `p_aca + p_scc`,
+sees the precision loss.
+
+#### How it was caught
+
+`src/10b_cross_dataset_optimized.py` (Phase 5) applies softmax *inside*
+the autocast block, where PyTorch's autocast policy forces it to FP32.
+When 10b's `all_off` config (every flag disabled) ran the built-in
+sanity check against the existing `cross_dataset_metrics.json`, it found:
+
+```
+accuracy  : 0.5753 vs 0.5754  Δ=-0.0001  ✓ (cuDNN nondeterminism)
+precision : 0.5440 vs 0.5441  Δ=-0.0001  ✓
+recall    : 0.9286 vs 0.9286  Δ=+0.0000  ✓
+f1_binary : 0.6861 vs 0.6861  Δ=+0.0000  ✓
+roc_auc   : 0.6852 vs 0.5987  Δ=+0.0865  ✗ ← bug signature
+```
+
+Four discrete metrics matching to 0.0001 + AUC differing by 0.09 = a
+precision bug, not a logic bug.
+
+#### The fix
+
+One line, in `logits_to_binary`:
+
+```python
+def logits_to_binary(logits):
+    logits = logits.float()      # FP32 softmax (Phase 5 fix; FP16 was depressing AUC)
+    probs  = softmax(logits, dim=1)
+    ...
+```
+
+`logits.float()` upcasts FP16 → FP32 before softmax. Argmax behaviour
+is preserved exactly (monotonic conversion). No model re-training, no
+re-evaluation of S1 / S3 needed (those scripts apply softmax in
+different code paths).
+
+#### Corrected S2 baseline (FP32 softmax)
+
+| Metric    | Old (FP16) | Corrected (FP32) | Δ |
+|-----------|------------|------------------|---|
+| Accuracy  | 0.5754     | 0.5753           | -0.0001 (cuDNN) |
+| Precision | 0.5441     | 0.5440           | -0.0001 (cuDNN) |
+| Recall    | 0.9286     | 0.9286           |  0.0000 |
+| F1-binary | 0.6861     | 0.6861           |  0.0000 |
+| **ROC-AUC** | **0.5987**   | **0.6851**           | **+0.0864** |
+
+#### Paper implications
+
+The corrected AUC of **0.6851** **supersedes** the old published value
+of 0.5987 in the paper. The old value was an artifact of an FP16
+quantization bug, not a property of the model. All other metrics in
+the paper are unchanged (within cuDNN-nondeterminism noise).
+
+The stale baseline JSON has been archived at
+`results/metrics/cross_dataset_metrics_v1_stale.json` for traceability.
+
+---
+
+### Session 9 (cont.) — 2026-05-06 — Phase 5 (S2 zero-shot optimization)
+
+**Work Done:**
+- Inherited `src/10b_cross_dataset_optimized.py` (675 lines, untracked)
+  matching the Phase 5 spec point-for-point: 5 toggleable flags
+  (`USE_LC25000_STAIN_NORM`, `USE_PROBABILITY_MAPPING`, `USE_8_AUG_TTA`,
+  `USE_THRESHOLD_TUNING`, `USE_BN_RECALIBRATION` off-by-default), built-in
+  flag-ablation, and a strict 4dp sanity check against
+  `10_cross_dataset.py`'s baseline. Used as-is.
+- Backed up the LC25000 training checkpoint:
+  `checkpoints/hagcanet_lc25000_baseline.pth` (= copy of
+  `hagcanet_best.pth`, the LC25000-trained 3-class model).
+- First run (against the FP16-buggy baseline) failed the sanity check on
+  AUC only. Investigation traced this to the FP16 softmax bug above. Fix
+  applied to `src/10_cross_dataset.py`; baseline regenerated.
+- Re-ran 10b against the corrected baseline. Sanity check passed
+  cleanly: max|Δ| = 0.0000 on all five metrics. Wall-time: ~80 min for
+  4 unique (stain, tta, bn) combos × val+test (3 with 8-aug TTA, 1 plain).
+- Refreshed three-scenario comparison via `src/14_compare_scenarios.py`.
+
+**Phase 5 Final Results (against corrected FP32 baseline):**
+
+| Config              | Acc    | Prec   | Rec    | F1     | AUC    | τ    |
+|---------------------|--------|--------|--------|--------|--------|------|
+| baseline (10_cross) | 0.5753 | 0.5440 | 0.9286 | 0.6861 | 0.6851 | 0.50 |
+| all_off (sanity)    | 0.5753 | 0.5440 | 0.9286 | 0.6861 | 0.6851 | 0.50 |
+| **all_on**          | **0.6161** | 0.5808 | 0.8332 | 0.6845 | 0.6706 | 0.87 |
+| off_stain           | 0.5937 | 0.5609 | 0.8616 | 0.6795 | 0.6832 | 0.95 |
+| off_prob            | 0.6182 | 0.5765 | 0.8895 | 0.6996 | 0.6706 | 0.50 |
+| off_tta             | **0.6212** | 0.5799 | 0.8785 | 0.6986 | 0.6806 | 0.95 |
+| off_thresh          | 0.6175 | 0.5758 | 0.8915 | 0.6997 | 0.6706 | 0.50 |
+
+**Flag contribution (Δ accuracy, primary `all_on` minus `off_X`):**
+| Flag                       | Δacc       | Verdict                          |
+|----------------------------|------------|----------------------------------|
+| **LC25000 stain norm**     | **+0.0224** | **Only flag that genuinely helps** |
+| Threshold tuning (τ*=0.87) | -0.0014    | Marginally hurts                 |
+| Probability mapping        | -0.0021    | Marginally hurts                 |
+| 8-aug TTA                  | -0.0051    | Slightly hurts                   |
+
+**Outcome categorization:**
+- Δacc all_on vs corrected baseline = **+0.0408** (just under the 0.05
+  publication-grade threshold).
+- Best single config (`off_tta`) = **+0.0459** vs baseline (also under
+  0.05). Per protocol, do NOT overwrite `cross_dataset_metrics.json`
+  with the optimized numbers — leave the corrected zero-shot baseline
+  as-is so the paper can cite both numbers honestly.
+- Stain normalization is the **only** technique with a positive
+  contribution. Probability mapping, TTA, and threshold tuning each
+  slightly hurt, individually. They mostly trade recall for precision
+  without improving the F1 / AUC ranking.
+- Hypothesis why stain norm helps: PCam patches differ from LC25000
+  in H&E staining intensity (lymph node vs lung tissue, different
+  scanner / lab batch). Reinhard normalization to LC25000 reference
+  stats reduces this gap, recovering ~2pp accuracy.
+- Hypothesis why TTA hurts: the LC25000 model is biased toward
+  predicting "tumor" on PCam (recall 0.93 at default τ); averaging
+  flipped views amplifies the prior rather than the signal.
+
+**Files Created/Modified:**
+- `src/10_cross_dataset.py` — single-line FP32 softmax fix in
+  `logits_to_binary`.
+- `src/10b_cross_dataset_optimized.py` — newly added (was untracked).
+- `results/metrics/cross_dataset_metrics.json` — refreshed (corrected
+  AUC 0.6851).
+- `results/metrics/cross_dataset_metrics_v1_stale.json` — archived
+  pre-fix baseline (AUC 0.5987 FP16) for traceability.
+- `results/metrics/cross_dataset_metrics_optimized.json` — new (Phase 5
+  optimized numbers + flag-ablation block).
+- `results/metrics/cross_dataset_flag_ablation.json` — new (per-flag
+  delta breakdown + ranking by accuracy drop when off).
+- `results/metrics/cross_dataset_report.txt` — refreshed.
+- `results/plots/cross_dataset_confusion.png` — refreshed.
+- `results/plots/cross_dataset_confusion_optimized.png` — new.
+- `results/plots/cross_dataset_threshold_sweep.png` — new.
+- `results/summary/scenario_comparison.{txt,json}` — refreshed (S2 AUC
+  0.5988 → 0.6851).
+- `results/plots/scenario_comparison.png` — refreshed.
+- `checkpoints/hagcanet_lc25000_baseline.pth` — new (copy of
+  `hagcanet_best.pth`).
+- `OPTIMIZATION_STATUS.md` — updated.
+- `CLAUDE.md` — this entry.
+
+**Next:** Phase 5 complete; awaiting user decision on next phase.

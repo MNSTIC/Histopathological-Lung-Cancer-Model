@@ -2520,3 +2520,634 @@ weighted avg     0.9249    0.9232    0.9231     32768
 2026-05-02 13:05:32 | INFO | 
 Pipeline complete! All 14 steps done.
 2026-05-02 13:05:32 | INFO | See results/summary/scenario_comparison.txt for the full comparison.
+2026-05-05 23:55:13 | INFO | ========================================================================
+2026-05-05 23:55:13 | INFO |   PHASE 5: S2 zero-shot optimization (LC25000 -> PCam)
+2026-05-05 23:55:13 | INFO | ========================================================================
+2026-05-05 23:55:13 | INFO |   primary flags: stain=True, prob_map=True, tta=True, thresh=True, bn_recal=False
+2026-05-05 23:55:13 | INFO |   ablation: True
+2026-05-05 23:55:14 | INFO | Loaded hagcanet_best.pth  (epoch 22, val_f1=1.0000)
+2026-05-05 23:55:14 | INFO | Computing LC25000 Reinhard ref stats (200-image sample) ...
+2026-05-05 23:55:21 | INFO | Need 4 unique (stain, tta, bn_recal) combos: [(False, False, False), (False, True, False), (True, False, False), (True, True, False)]
+2026-05-05 23:55:21 | INFO | ------------------------------------------------------------------------
+2026-05-05 23:55:21 | INFO |   combo: stain=False, tta=False, bn_recal=False
+2026-05-05 23:55:21 | INFO |   Collecting val probs (stain=False, tta=False) ...
+2026-05-05 23:55:48 | INFO |   [val] batch 100/2048 (27s)
+2026-05-05 23:55:55 | INFO |   [val] batch 200/2048 (35s)
+2026-05-05 23:56:03 | INFO |   [val] batch 300/2048 (43s)
+2026-05-05 23:56:11 | INFO |   [val] batch 400/2048 (50s)
+2026-05-05 23:56:19 | INFO |   [val] batch 500/2048 (58s)
+2026-05-05 23:56:27 | INFO |   [val] batch 600/2048 (66s)
+2026-05-05 23:56:34 | INFO |   [val] batch 700/2048 (74s)
+2026-05-05 23:56:42 | INFO |   [val] batch 800/2048 (81s)
+2026-05-05 23:56:50 | INFO |   [val] batch 900/2048 (89s)
+2026-05-05 23:56:58 | INFO |   [val] batch 1000/2048 (97s)
+2026-05-05 23:57:06 | INFO |   [val] batch 1100/2048 (105s)
+2026-05-05 23:57:14 | INFO |   [val] batch 1200/2048 (113s)
+2026-05-05 23:57:22 | INFO |   [val] batch 1300/2048 (121s)
+2026-05-05 23:57:31 | INFO |   [val] batch 1400/2048 (130s)
+2026-05-05 23:57:39 | INFO |   [val] batch 1500/2048 (138s)
+2026-05-05 23:57:47 | INFO |   [val] batch 1600/2048 (146s)
+2026-05-05 23:57:55 | INFO |   [val] batch 1700/2048 (155s)
+2026-05-05 23:58:04 | INFO |   [val] batch 1800/2048 (163s)
+2026-05-05 23:58:12 | INFO |   [val] batch 1900/2048 (171s)
+2026-05-05 23:58:20 | INFO |   [val] batch 2000/2048 (180s)
+2026-05-05 23:58:24 | INFO |   [val] batch 2048/2048 (183s)
+2026-05-05 23:58:24 | INFO |   Collecting test probs (stain=False, tta=False) ...
+2026-05-05 23:58:33 | INFO |   [test] batch 100/2048 (9s)
+2026-05-05 23:58:41 | INFO |   [test] batch 200/2048 (17s)
+2026-05-05 23:58:49 | INFO |   [test] batch 300/2048 (25s)
+2026-05-05 23:58:57 | INFO |   [test] batch 400/2048 (33s)
+2026-05-05 23:59:06 | INFO |   [test] batch 500/2048 (42s)
+2026-05-05 23:59:14 | INFO |   [test] batch 600/2048 (50s)
+2026-05-05 23:59:23 | INFO |   [test] batch 700/2048 (59s)
+2026-05-05 23:59:32 | INFO |   [test] batch 800/2048 (68s)
+2026-05-05 23:59:40 | INFO |   [test] batch 900/2048 (76s)
+2026-05-05 23:59:49 | INFO |   [test] batch 1000/2048 (85s)
+2026-05-05 23:59:57 | INFO |   [test] batch 1100/2048 (93s)
+2026-05-06 00:00:06 | INFO |   [test] batch 1200/2048 (102s)
+2026-05-06 00:00:15 | INFO |   [test] batch 1300/2048 (111s)
+2026-05-06 00:00:23 | INFO |   [test] batch 1400/2048 (119s)
+2026-05-06 00:00:32 | INFO |   [test] batch 1500/2048 (128s)
+2026-05-06 00:00:41 | INFO |   [test] batch 1600/2048 (137s)
+2026-05-06 00:00:49 | INFO |   [test] batch 1700/2048 (145s)
+2026-05-06 00:00:58 | INFO |   [test] batch 1800/2048 (154s)
+2026-05-06 00:01:07 | INFO |   [test] batch 1900/2048 (162s)
+2026-05-06 00:01:15 | INFO |   [test] batch 2000/2048 (171s)
+2026-05-06 00:01:19 | INFO |   [test] batch 2048/2048 (175s)
+2026-05-06 00:01:19 | INFO | ------------------------------------------------------------------------
+2026-05-06 00:01:19 | INFO |   combo: stain=False, tta=True, bn_recal=False
+2026-05-06 00:01:19 | INFO |   Collecting val probs (stain=False, tta=True) ...
+2026-05-06 00:02:07 | INFO |   [val] batch 100/2048 (48s)
+2026-05-06 00:02:54 | INFO |   [val] batch 200/2048 (95s)
+2026-05-06 00:03:42 | INFO |   [val] batch 300/2048 (143s)
+2026-05-06 00:04:25 | INFO |   [val] batch 400/2048 (186s)
+2026-05-06 00:05:07 | INFO |   [val] batch 500/2048 (228s)
+2026-05-06 00:05:50 | INFO |   [val] batch 600/2048 (271s)
+2026-05-06 00:06:32 | INFO |   [val] batch 700/2048 (313s)
+2026-05-06 00:07:16 | INFO |   [val] batch 800/2048 (357s)
+2026-05-06 00:08:03 | INFO |   [val] batch 900/2048 (404s)
+2026-05-06 00:08:46 | INFO |   [val] batch 1000/2048 (447s)
+2026-05-06 00:09:31 | INFO |   [val] batch 1100/2048 (492s)
+2026-05-06 00:10:14 | INFO |   [val] batch 1200/2048 (535s)
+2026-05-06 00:10:57 | INFO |   [val] batch 1300/2048 (578s)
+2026-05-06 00:11:41 | INFO |   [val] batch 1400/2048 (622s)
+2026-05-06 00:12:24 | INFO |   [val] batch 1500/2048 (665s)
+2026-05-06 00:13:07 | INFO |   [val] batch 1600/2048 (708s)
+2026-05-06 00:13:52 | INFO |   [val] batch 1700/2048 (754s)
+2026-05-06 00:14:39 | INFO |   [val] batch 1800/2048 (801s)
+2026-05-06 00:15:27 | INFO |   [val] batch 1900/2048 (848s)
+2026-05-06 00:16:13 | INFO |   [val] batch 2000/2048 (894s)
+2026-05-06 00:16:36 | INFO |   [val] batch 2048/2048 (917s)
+2026-05-06 00:16:36 | INFO |   Collecting test probs (stain=False, tta=True) ...
+2026-05-06 00:17:28 | INFO |   [test] batch 100/2048 (52s)
+2026-05-06 00:18:18 | INFO |   [test] batch 200/2048 (103s)
+2026-05-06 00:19:08 | INFO |   [test] batch 300/2048 (152s)
+2026-05-06 00:19:56 | INFO |   [test] batch 400/2048 (200s)
+2026-05-06 00:20:44 | INFO |   [test] batch 500/2048 (248s)
+2026-05-06 00:21:32 | INFO |   [test] batch 600/2048 (296s)
+2026-05-06 00:22:19 | INFO |   [test] batch 700/2048 (343s)
+2026-05-06 00:23:07 | INFO |   [test] batch 800/2048 (391s)
+2026-05-06 00:23:55 | INFO |   [test] batch 900/2048 (439s)
+2026-05-06 00:24:42 | INFO |   [test] batch 1000/2048 (486s)
+2026-05-06 00:25:30 | INFO |   [test] batch 1100/2048 (534s)
+2026-05-06 00:26:19 | INFO |   [test] batch 1200/2048 (583s)
+2026-05-06 00:27:03 | INFO |   [test] batch 1300/2048 (627s)
+2026-05-06 00:27:47 | INFO |   [test] batch 1400/2048 (671s)
+2026-05-06 00:28:30 | INFO |   [test] batch 1500/2048 (714s)
+2026-05-06 00:29:16 | INFO |   [test] batch 1600/2048 (760s)
+2026-05-06 00:30:00 | INFO |   [test] batch 1700/2048 (805s)
+2026-05-06 00:30:44 | INFO |   [test] batch 1800/2048 (848s)
+2026-05-06 00:31:33 | INFO |   [test] batch 1900/2048 (897s)
+2026-05-06 00:32:20 | INFO |   [test] batch 2000/2048 (944s)
+2026-05-06 00:32:43 | INFO |   [test] batch 2048/2048 (967s)
+2026-05-06 00:32:43 | INFO | ------------------------------------------------------------------------
+2026-05-06 00:32:43 | INFO |   combo: stain=True, tta=False, bn_recal=False
+2026-05-06 00:32:43 | INFO |   Collecting val probs (stain=True, tta=False) ...
+2026-05-06 00:32:51 | INFO |   [val] batch 100/2048 (8s)
+2026-05-06 00:32:59 | INFO |   [val] batch 200/2048 (16s)
+2026-05-06 00:33:07 | INFO |   [val] batch 300/2048 (24s)
+2026-05-06 00:33:16 | INFO |   [val] batch 400/2048 (32s)
+2026-05-06 00:33:24 | INFO |   [val] batch 500/2048 (41s)
+2026-05-06 00:33:33 | INFO |   [val] batch 600/2048 (50s)
+2026-05-06 00:33:42 | INFO |   [val] batch 700/2048 (58s)
+2026-05-06 00:33:50 | INFO |   [val] batch 800/2048 (67s)
+2026-05-06 00:33:59 | INFO |   [val] batch 900/2048 (76s)
+2026-05-06 00:34:08 | INFO |   [val] batch 1000/2048 (85s)
+2026-05-06 00:34:17 | INFO |   [val] batch 1100/2048 (94s)
+2026-05-06 00:34:26 | INFO |   [val] batch 1200/2048 (103s)
+2026-05-06 00:34:34 | INFO |   [val] batch 1300/2048 (111s)
+2026-05-06 00:34:43 | INFO |   [val] batch 1400/2048 (120s)
+2026-05-06 00:34:52 | INFO |   [val] batch 1500/2048 (128s)
+2026-05-06 00:35:00 | INFO |   [val] batch 1600/2048 (137s)
+2026-05-06 00:35:10 | INFO |   [val] batch 1700/2048 (146s)
+2026-05-06 00:35:17 | INFO |   [val] batch 1800/2048 (154s)
+2026-05-06 00:35:26 | INFO |   [val] batch 1900/2048 (162s)
+2026-05-06 00:35:34 | INFO |   [val] batch 2000/2048 (171s)
+2026-05-06 00:35:38 | INFO |   [val] batch 2048/2048 (175s)
+2026-05-06 00:35:38 | INFO |   Collecting test probs (stain=True, tta=False) ...
+2026-05-06 00:35:48 | INFO |   [test] batch 100/2048 (9s)
+2026-05-06 00:35:56 | INFO |   [test] batch 200/2048 (17s)
+2026-05-06 00:36:04 | INFO |   [test] batch 300/2048 (25s)
+2026-05-06 00:36:12 | INFO |   [test] batch 400/2048 (34s)
+2026-05-06 00:36:20 | INFO |   [test] batch 500/2048 (42s)
+2026-05-06 00:36:28 | INFO |   [test] batch 600/2048 (50s)
+2026-05-06 00:36:36 | INFO |   [test] batch 700/2048 (58s)
+2026-05-06 00:36:44 | INFO |   [test] batch 800/2048 (66s)
+2026-05-06 00:36:52 | INFO |   [test] batch 900/2048 (74s)
+2026-05-06 00:37:00 | INFO |   [test] batch 1000/2048 (82s)
+2026-05-06 00:37:08 | INFO |   [test] batch 1100/2048 (90s)
+2026-05-06 00:37:16 | INFO |   [test] batch 1200/2048 (98s)
+2026-05-06 00:37:24 | INFO |   [test] batch 1300/2048 (106s)
+2026-05-06 00:37:32 | INFO |   [test] batch 1400/2048 (114s)
+2026-05-06 00:37:40 | INFO |   [test] batch 1500/2048 (122s)
+2026-05-06 00:37:48 | INFO |   [test] batch 1600/2048 (130s)
+2026-05-06 00:37:56 | INFO |   [test] batch 1700/2048 (138s)
+2026-05-06 00:38:04 | INFO |   [test] batch 1800/2048 (146s)
+2026-05-06 00:38:12 | INFO |   [test] batch 1900/2048 (153s)
+2026-05-06 00:38:20 | INFO |   [test] batch 2000/2048 (162s)
+2026-05-06 00:38:24 | INFO |   [test] batch 2048/2048 (166s)
+2026-05-06 00:38:24 | INFO | ------------------------------------------------------------------------
+2026-05-06 00:38:24 | INFO |   combo: stain=True, tta=True, bn_recal=False
+2026-05-06 00:38:24 | INFO |   Collecting val probs (stain=True, tta=True) ...
+2026-05-06 00:39:11 | INFO |   [val] batch 100/2048 (47s)
+2026-05-06 00:39:57 | INFO |   [val] batch 200/2048 (93s)
+2026-05-06 00:40:44 | INFO |   [val] batch 300/2048 (139s)
+2026-05-06 00:41:30 | INFO |   [val] batch 400/2048 (186s)
+2026-05-06 00:42:16 | INFO |   [val] batch 500/2048 (232s)
+2026-05-06 00:43:00 | INFO |   [val] batch 600/2048 (276s)
+2026-05-06 00:43:46 | INFO |   [val] batch 700/2048 (322s)
+2026-05-06 00:44:33 | INFO |   [val] batch 800/2048 (369s)
+2026-05-06 00:45:20 | INFO |   [val] batch 900/2048 (416s)
+2026-05-06 00:46:08 | INFO |   [val] batch 1000/2048 (464s)
+2026-05-06 00:46:56 | INFO |   [val] batch 1100/2048 (511s)
+2026-05-06 00:47:41 | INFO |   [val] batch 1200/2048 (557s)
+2026-05-06 00:48:28 | INFO |   [val] batch 1300/2048 (604s)
+2026-05-06 00:49:13 | INFO |   [val] batch 1400/2048 (649s)
+2026-05-06 00:49:59 | INFO |   [val] batch 1500/2048 (695s)
+2026-05-06 00:50:42 | INFO |   [val] batch 1600/2048 (738s)
+2026-05-06 00:51:25 | INFO |   [val] batch 1700/2048 (780s)
+2026-05-06 00:52:07 | INFO |   [val] batch 1800/2048 (823s)
+2026-05-06 00:52:51 | INFO |   [val] batch 1900/2048 (867s)
+2026-05-06 00:53:35 | INFO |   [val] batch 2000/2048 (911s)
+2026-05-06 00:53:59 | INFO |   [val] batch 2048/2048 (935s)
+2026-05-06 00:53:59 | INFO |   Collecting test probs (stain=True, tta=True) ...
+2026-05-06 00:54:48 | INFO |   [test] batch 100/2048 (48s)
+2026-05-06 00:55:36 | INFO |   [test] batch 200/2048 (96s)
+2026-05-06 00:56:24 | INFO |   [test] batch 300/2048 (144s)
+2026-05-06 00:57:12 | INFO |   [test] batch 400/2048 (192s)
+2026-05-06 00:57:59 | INFO |   [test] batch 500/2048 (240s)
+2026-05-06 00:58:47 | INFO |   [test] batch 600/2048 (288s)
+2026-05-06 00:59:35 | INFO |   [test] batch 700/2048 (335s)
+2026-05-06 01:00:22 | INFO |   [test] batch 800/2048 (383s)
+2026-05-06 01:01:09 | INFO |   [test] batch 900/2048 (430s)
+2026-05-06 01:01:57 | INFO |   [test] batch 1000/2048 (477s)
+2026-05-06 01:02:44 | INFO |   [test] batch 1100/2048 (525s)
+2026-05-06 01:03:32 | INFO |   [test] batch 1200/2048 (573s)
+2026-05-06 01:04:19 | INFO |   [test] batch 1300/2048 (620s)
+2026-05-06 01:05:07 | INFO |   [test] batch 1400/2048 (668s)
+2026-05-06 01:05:54 | INFO |   [test] batch 1500/2048 (715s)
+2026-05-06 01:06:42 | INFO |   [test] batch 1600/2048 (762s)
+2026-05-06 01:07:29 | INFO |   [test] batch 1700/2048 (810s)
+2026-05-06 01:08:17 | INFO |   [test] batch 1800/2048 (857s)
+2026-05-06 01:09:04 | INFO |   [test] batch 1900/2048 (905s)
+2026-05-06 01:09:52 | INFO |   [test] batch 2000/2048 (953s)
+2026-05-06 01:10:15 | INFO |   [test] batch 2048/2048 (975s)
+2026-05-06 01:10:15 | INFO | ========================================================================
+2026-05-06 01:10:15 | INFO |   Evaluating configurations
+2026-05-06 01:10:15 | INFO | ========================================================================
+2026-05-06 01:10:15 | INFO |   [all_on] τ* = 0.87  (val F1 = 0.7457)
+2026-05-06 01:10:15 | INFO |         all_on | acc=0.6161 prec=0.5808 rec=0.8332 f1=0.6845 auc=0.6706 τ=0.87
+2026-05-06 01:10:15 | INFO |        all_off | acc=0.5753 prec=0.5440 rec=0.9286 f1=0.6861 auc=0.6852 τ=0.50
+2026-05-06 01:10:16 | INFO |   [off_stain] τ* = 0.95  (val F1 = 0.7218)
+2026-05-06 01:10:16 | INFO |      off_stain | acc=0.5937 prec=0.5609 rec=0.8616 f1=0.6795 auc=0.6832 τ=0.95
+2026-05-06 01:10:16 | INFO |       off_prob | acc=0.6182 prec=0.5765 rec=0.8894 f1=0.6996 auc=0.6706 τ=0.50
+2026-05-06 01:10:16 | INFO |   [off_tta] τ* = 0.95  (val F1 = 0.7389)
+2026-05-06 01:10:16 | INFO |        off_tta | acc=0.6213 prec=0.5799 rec=0.8786 f1=0.6987 auc=0.6806 τ=0.95
+2026-05-06 01:10:16 | INFO |     off_thresh | acc=0.6175 prec=0.5758 rec=0.8915 f1=0.6997 auc=0.6706 τ=0.50
+2026-05-06 01:10:16 | INFO | ------------------------------------------------------------------------
+2026-05-06 01:10:16 | INFO |   [sanity] all_off vs 10_cross_dataset baseline: max|Δ|=0.0865
+2026-05-06 01:10:16 | INFO |     accuracy  : optimized=0.5753  baseline=0.5754  Δ=-0.0001
+2026-05-06 01:10:16 | INFO |     precision : optimized=0.5440  baseline=0.5441  Δ=-0.0001
+2026-05-06 01:10:16 | INFO |     recall    : optimized=0.9286  baseline=0.9286  Δ=+0.0000
+2026-05-06 01:10:16 | INFO |     f1_binary : optimized=0.6861  baseline=0.6861  Δ=+0.0000
+2026-05-06 01:10:16 | INFO |     roc_auc   : optimized=0.6852  baseline=0.5987  Δ=+0.0865
+2026-05-06 01:10:16 | ERROR |   SANITY CHECK FAILED — all_off diverges from baseline > 1e-4
+2026-05-06 01:10:16 | ERROR |   Refusing to write outputs; investigate before proceeding.
+2026-05-06 01:15:18 | INFO | ============================================================
+2026-05-06 01:15:18 | INFO |   STEP 10: CROSS-DATASET TEST (PatchCamelyon)
+2026-05-06 01:15:18 | INFO | ============================================================
+2026-05-06 01:15:18 | INFO | Images : C:\ml_project\data\external_test\archive\pcam\test_split.h5
+2026-05-06 01:15:18 | INFO | Labels : C:\ml_project\data\external_test\archive\Labels\Labels\camelyonpatch_level_2_split_test_y.h5
+2026-05-06 01:15:18 | INFO | PCam test samples: 32,768
+2026-05-06 01:15:19 | INFO | Loaded checkpoint: hagcanet_best.pth (epoch 22, val_F1=1.0000)
+2026-05-06 01:15:19 | INFO | Running inference on PCam test set ...
+2026-05-06 01:15:19 | INFO |   Class mapping: lung_aca/lung_scc -> tumor(1), lung_n -> normal(0)
+2026-05-06 01:16:10 | INFO | ============================================================
+2026-05-06 01:16:10 | INFO |   STEP 10: CROSS-DATASET TEST (PatchCamelyon)
+2026-05-06 01:16:10 | INFO | ============================================================
+2026-05-06 01:16:10 | INFO | Images : C:\ml_project\data\external_test\archive\pcam\test_split.h5
+2026-05-06 01:16:10 | INFO | Labels : C:\ml_project\data\external_test\archive\Labels\Labels\camelyonpatch_level_2_split_test_y.h5
+2026-05-06 01:16:10 | INFO | PCam test samples: 32,768
+2026-05-06 01:16:11 | INFO | Loaded checkpoint: hagcanet_best.pth (epoch 22, val_F1=1.0000)
+2026-05-06 01:16:11 | INFO | Running inference on PCam test set ...
+2026-05-06 01:16:11 | INFO |   Class mapping: lung_aca/lung_scc -> tumor(1), lung_n -> normal(0)
+2026-05-06 01:19:08 | INFO | 
+============================================================
+2026-05-06 01:19:08 | INFO |   CROSS-DATASET RESULTS (PCam test split)
+2026-05-06 01:19:08 | INFO | ============================================================
+2026-05-06 01:19:08 | INFO |   Accuracy       : 0.5754  (57.54%)
+2026-05-06 01:19:08 | INFO |   Precision      : 0.5441
+2026-05-06 01:19:08 | INFO |   Recall         : 0.9286
+2026-05-06 01:19:08 | INFO |   F1 (binary)    : 0.6861
+2026-05-06 01:19:08 | INFO |   ROC-AUC        : 0.5988
+2026-05-06 01:19:08 | INFO |   Samples tested : 32,768
+2026-05-06 01:19:08 | INFO | 
+              precision    recall  f1-score   support
+
+      Normal     0.7572    0.2224    0.3439     16391
+       Tumor     0.5441    0.9286    0.6861     16377
+
+    accuracy                         0.5754     32768
+   macro avg     0.6506    0.5755    0.5150     32768
+weighted avg     0.6507    0.5754    0.5149     32768
+
+2026-05-06 01:19:08 | INFO | Metrics saved: C:\ml_project\results\metrics\cross_dataset_metrics.json
+2026-05-06 01:19:08 | INFO | Report saved: C:\ml_project\results\metrics\cross_dataset_report.txt
+2026-05-06 01:19:09 | INFO | 
+Next: python src	_ablation.py  (or: python main.py)
+2026-05-06 01:27:30 | INFO | ============================================================
+2026-05-06 01:27:30 | INFO |   STEP 10: CROSS-DATASET TEST (PatchCamelyon)
+2026-05-06 01:27:30 | INFO | ============================================================
+2026-05-06 01:27:30 | INFO | Images : C:\ml_project\data\external_test\archive\pcam\test_split.h5
+2026-05-06 01:27:30 | INFO | Labels : C:\ml_project\data\external_test\archive\Labels\Labels\camelyonpatch_level_2_split_test_y.h5
+2026-05-06 01:27:30 | INFO | PCam test samples: 32,768
+2026-05-06 01:27:32 | INFO | Loaded checkpoint: hagcanet_best.pth (epoch 22, val_F1=1.0000)
+2026-05-06 01:27:32 | INFO | Running inference on PCam test set ...
+2026-05-06 01:27:32 | INFO |   Class mapping: lung_aca/lung_scc -> tumor(1), lung_n -> normal(0)
+2026-05-06 01:30:25 | INFO | 
+============================================================
+2026-05-06 01:30:25 | INFO |   CROSS-DATASET RESULTS (PCam test split)
+2026-05-06 01:30:25 | INFO | ============================================================
+2026-05-06 01:30:25 | INFO |   Accuracy       : 0.5754  (57.54%)
+2026-05-06 01:30:25 | INFO |   Precision      : 0.5441
+2026-05-06 01:30:25 | INFO |   Recall         : 0.9286
+2026-05-06 01:30:25 | INFO |   F1 (binary)    : 0.6861
+2026-05-06 01:30:25 | INFO |   ROC-AUC        : 0.5988
+2026-05-06 01:30:25 | INFO |   Samples tested : 32,768
+2026-05-06 01:30:25 | INFO | 
+              precision    recall  f1-score   support
+
+      Normal     0.7572    0.2224    0.3439     16391
+       Tumor     0.5441    0.9286    0.6861     16377
+
+    accuracy                         0.5754     32768
+   macro avg     0.6506    0.5755    0.5150     32768
+weighted avg     0.6507    0.5754    0.5149     32768
+
+2026-05-06 01:30:25 | INFO | Metrics saved: C:\ml_project\results\metrics\cross_dataset_metrics.json
+2026-05-06 01:30:25 | INFO | Report saved: C:\ml_project\results\metrics\cross_dataset_report.txt
+2026-05-06 01:30:25 | INFO | 
+Next: python src	_ablation.py  (or: python main.py)
+2026-05-06 01:31:20 | INFO | ============================================================
+2026-05-06 01:31:20 | INFO |   STEP 10: CROSS-DATASET TEST (PatchCamelyon)
+2026-05-06 01:31:20 | INFO | ============================================================
+2026-05-06 01:31:20 | INFO | Images : C:\ml_project\data\external_test\archive\pcam\test_split.h5
+2026-05-06 01:31:20 | INFO | Labels : C:\ml_project\data\external_test\archive\Labels\Labels\camelyonpatch_level_2_split_test_y.h5
+2026-05-06 01:31:20 | INFO | PCam test samples: 32,768
+2026-05-06 01:31:21 | INFO | Loaded checkpoint: hagcanet_best.pth (epoch 22, val_F1=1.0000)
+2026-05-06 01:31:21 | INFO | Running inference on PCam test set ...
+2026-05-06 01:31:21 | INFO |   Class mapping: lung_aca/lung_scc -> tumor(1), lung_n -> normal(0)
+2026-05-06 01:34:15 | INFO | 
+============================================================
+2026-05-06 01:34:15 | INFO |   CROSS-DATASET RESULTS (PCam test split)
+2026-05-06 01:34:15 | INFO | ============================================================
+2026-05-06 01:34:15 | INFO |   Accuracy       : 0.5753  (57.53%)
+2026-05-06 01:34:15 | INFO |   Precision      : 0.5440
+2026-05-06 01:34:15 | INFO |   Recall         : 0.9286
+2026-05-06 01:34:15 | INFO |   F1 (binary)    : 0.6861
+2026-05-06 01:34:15 | INFO |   ROC-AUC        : 0.5988
+2026-05-06 01:34:15 | INFO |   Samples tested : 32,768
+2026-05-06 01:34:15 | INFO | 
+              precision    recall  f1-score   support
+
+      Normal     0.7572    0.2224    0.3438     16391
+       Tumor     0.5440    0.9286    0.6861     16377
+
+    accuracy                         0.5753     32768
+   macro avg     0.6506    0.5755    0.5149     32768
+weighted avg     0.6506    0.5753    0.5149     32768
+
+2026-05-06 01:34:15 | INFO | Metrics saved: C:\ml_project\results\metrics\cross_dataset_metrics.json
+2026-05-06 01:34:15 | INFO | Report saved: C:\ml_project\results\metrics\cross_dataset_report.txt
+2026-05-06 01:34:16 | INFO | 
+Next: python src	_ablation.py  (or: python main.py)
+2026-05-06 10:11:53 | INFO | ============================================================
+2026-05-06 10:11:53 | INFO |   STEP 10: CROSS-DATASET TEST (PatchCamelyon)
+2026-05-06 10:11:53 | INFO | ============================================================
+2026-05-06 10:11:53 | INFO | Images : C:\ml_project\data\external_test\archive\pcam\test_split.h5
+2026-05-06 10:11:53 | INFO | Labels : C:\ml_project\data\external_test\archive\Labels\Labels\camelyonpatch_level_2_split_test_y.h5
+2026-05-06 10:11:53 | INFO | PCam test samples: 32,768
+2026-05-06 10:11:55 | INFO | Loaded checkpoint: hagcanet_best.pth (epoch 22, val_F1=1.0000)
+2026-05-06 10:11:55 | INFO | Running inference on PCam test set ...
+2026-05-06 10:11:55 | INFO |   Class mapping: lung_aca/lung_scc -> tumor(1), lung_n -> normal(0)
+2026-05-06 10:14:59 | INFO | 
+============================================================
+2026-05-06 10:14:59 | INFO |   CROSS-DATASET RESULTS (PCam test split)
+2026-05-06 10:14:59 | INFO | ============================================================
+2026-05-06 10:14:59 | INFO |   Accuracy       : 0.5753  (57.53%)
+2026-05-06 10:14:59 | INFO |   Precision      : 0.5440
+2026-05-06 10:14:59 | INFO |   Recall         : 0.9286
+2026-05-06 10:14:59 | INFO |   F1 (binary)    : 0.6861
+2026-05-06 10:14:59 | INFO |   ROC-AUC        : 0.5988
+2026-05-06 10:14:59 | INFO |   Samples tested : 32,768
+2026-05-06 10:14:59 | INFO | 
+              precision    recall  f1-score   support
+
+      Normal     0.7572    0.2224    0.3438     16391
+       Tumor     0.5440    0.9286    0.6861     16377
+
+    accuracy                         0.5753     32768
+   macro avg     0.6506    0.5755    0.5149     32768
+weighted avg     0.6506    0.5753    0.5149     32768
+
+2026-05-06 10:14:59 | INFO | Metrics saved: C:\ml_project\results\metrics\cross_dataset_metrics.json
+2026-05-06 10:14:59 | INFO | Report saved: C:\ml_project\results\metrics\cross_dataset_report.txt
+2026-05-06 10:15:00 | INFO | 
+Next: python src	_ablation.py  (or: python main.py)
+2026-05-06 10:30:30 | INFO | ============================================================
+2026-05-06 10:30:30 | INFO |   STEP 10: CROSS-DATASET TEST (PatchCamelyon)
+2026-05-06 10:30:30 | INFO | ============================================================
+2026-05-06 10:30:30 | INFO | Images : C:\ml_project\data\external_test\archive\pcam\test_split.h5
+2026-05-06 10:30:30 | INFO | Labels : C:\ml_project\data\external_test\archive\Labels\Labels\camelyonpatch_level_2_split_test_y.h5
+2026-05-06 10:30:30 | INFO | PCam test samples: 32,768
+2026-05-06 10:30:32 | INFO | Loaded checkpoint: hagcanet_best.pth (epoch 22, val_F1=1.0000)
+2026-05-06 10:30:32 | INFO | Running inference on PCam test set ...
+2026-05-06 10:30:32 | INFO |   Class mapping: lung_aca/lung_scc -> tumor(1), lung_n -> normal(0)
+2026-05-06 10:33:37 | INFO | 
+============================================================
+2026-05-06 10:33:37 | INFO |   CROSS-DATASET RESULTS (PCam test split)
+2026-05-06 10:33:37 | INFO | ============================================================
+2026-05-06 10:33:37 | INFO |   Accuracy       : 0.5753  (57.53%)
+2026-05-06 10:33:37 | INFO |   Precision      : 0.5440
+2026-05-06 10:33:37 | INFO |   Recall         : 0.9286
+2026-05-06 10:33:37 | INFO |   F1 (binary)    : 0.6861
+2026-05-06 10:33:37 | INFO |   ROC-AUC        : 0.6851
+2026-05-06 10:33:37 | INFO |   Samples tested : 32,768
+2026-05-06 10:33:37 | INFO | 
+              precision    recall  f1-score   support
+
+      Normal     0.7572    0.2224    0.3438     16391
+       Tumor     0.5440    0.9286    0.6861     16377
+
+    accuracy                         0.5753     32768
+   macro avg     0.6506    0.5755    0.5149     32768
+weighted avg     0.6506    0.5753    0.5149     32768
+
+2026-05-06 10:33:37 | INFO | Metrics saved: C:\ml_project\results\metrics\cross_dataset_metrics.json
+2026-05-06 10:33:37 | INFO | Report saved: C:\ml_project\results\metrics\cross_dataset_report.txt
+2026-05-06 10:33:38 | INFO | 
+Next: python src	_ablation.py  (or: python main.py)
+2026-05-06 10:34:00 | INFO | ============================================================
+2026-05-06 10:34:00 | INFO |   STEP 14: THREE-SCENARIO COMPARISON
+2026-05-06 10:34:00 | INFO | ============================================================
+2026-05-06 10:34:00 | INFO | All three scenario metric files loaded.
+2026-05-06 10:34:01 | INFO | Text report saved: C:\ml_project\results\summary\scenario_comparison.txt
+2026-05-06 10:34:01 | INFO | JSON saved: C:\ml_project\results\summary\scenario_comparison.json
+2026-05-06 10:34:01 | INFO | 
+Pipeline complete! All 14 steps done.
+2026-05-06 10:34:01 | INFO | See results/summary/scenario_comparison.txt for the full comparison.
+2026-05-06 10:34:10 | INFO | ========================================================================
+2026-05-06 10:34:10 | INFO |   PHASE 5: S2 zero-shot optimization (LC25000 -> PCam)
+2026-05-06 10:34:10 | INFO | ========================================================================
+2026-05-06 10:34:10 | INFO |   primary flags: stain=True, prob_map=True, tta=True, thresh=True, bn_recal=False
+2026-05-06 10:34:10 | INFO |   ablation: True
+2026-05-06 10:34:11 | INFO | Loaded hagcanet_best.pth  (epoch 22, val_f1=1.0000)
+2026-05-06 10:34:11 | INFO | Loaded LC25000 Reinhard ref stats from cache: [159.49, 34.25, 159.16, 13.69, 88.92, 13.4]
+2026-05-06 10:34:11 | INFO | Need 4 unique (stain, tta, bn_recal) combos: [(False, False, False), (False, True, False), (True, False, False), (True, True, False)]
+2026-05-06 10:34:11 | INFO | ------------------------------------------------------------------------
+2026-05-06 10:34:11 | INFO |   combo: stain=False, tta=False, bn_recal=False
+2026-05-06 10:34:11 | INFO |   Collecting val probs (stain=False, tta=False) ...
+2026-05-06 10:34:37 | INFO |   [val] batch 100/2048 (25s)
+2026-05-06 10:34:44 | INFO |   [val] batch 200/2048 (33s)
+2026-05-06 10:34:52 | INFO |   [val] batch 300/2048 (41s)
+2026-05-06 10:35:00 | INFO |   [val] batch 400/2048 (49s)
+2026-05-06 10:35:08 | INFO |   [val] batch 500/2048 (57s)
+2026-05-06 10:35:16 | INFO |   [val] batch 600/2048 (64s)
+2026-05-06 10:35:24 | INFO |   [val] batch 700/2048 (72s)
+2026-05-06 10:35:32 | INFO |   [val] batch 800/2048 (80s)
+2026-05-06 10:35:40 | INFO |   [val] batch 900/2048 (88s)
+2026-05-06 10:35:48 | INFO |   [val] batch 1000/2048 (97s)
+2026-05-06 10:35:56 | INFO |   [val] batch 1100/2048 (105s)
+2026-05-06 10:36:05 | INFO |   [val] batch 1200/2048 (113s)
+2026-05-06 10:36:13 | INFO |   [val] batch 1300/2048 (122s)
+2026-05-06 10:36:21 | INFO |   [val] batch 1400/2048 (130s)
+2026-05-06 10:36:30 | INFO |   [val] batch 1500/2048 (138s)
+2026-05-06 10:36:38 | INFO |   [val] batch 1600/2048 (146s)
+2026-05-06 10:36:46 | INFO |   [val] batch 1700/2048 (155s)
+2026-05-06 10:36:55 | INFO |   [val] batch 1800/2048 (163s)
+2026-05-06 10:37:03 | INFO |   [val] batch 1900/2048 (172s)
+2026-05-06 10:37:11 | INFO |   [val] batch 2000/2048 (180s)
+2026-05-06 10:37:15 | INFO |   [val] batch 2048/2048 (184s)
+2026-05-06 10:37:15 | INFO |   Collecting test probs (stain=False, tta=False) ...
+2026-05-06 10:37:24 | INFO |   [test] batch 100/2048 (8s)
+2026-05-06 10:37:32 | INFO |   [test] batch 200/2048 (16s)
+2026-05-06 10:37:40 | INFO |   [test] batch 300/2048 (25s)
+2026-05-06 10:37:48 | INFO |   [test] batch 400/2048 (33s)
+2026-05-06 10:37:56 | INFO |   [test] batch 500/2048 (41s)
+2026-05-06 10:38:05 | INFO |   [test] batch 600/2048 (49s)
+2026-05-06 10:38:13 | INFO |   [test] batch 700/2048 (58s)
+2026-05-06 10:38:21 | INFO |   [test] batch 800/2048 (66s)
+2026-05-06 10:38:29 | INFO |   [test] batch 900/2048 (74s)
+2026-05-06 10:38:37 | INFO |   [test] batch 1000/2048 (82s)
+2026-05-06 10:38:46 | INFO |   [test] batch 1100/2048 (90s)
+2026-05-06 10:38:54 | INFO |   [test] batch 1200/2048 (99s)
+2026-05-06 10:39:02 | INFO |   [test] batch 1300/2048 (107s)
+2026-05-06 10:39:11 | INFO |   [test] batch 1400/2048 (115s)
+2026-05-06 10:39:19 | INFO |   [test] batch 1500/2048 (123s)
+2026-05-06 10:39:27 | INFO |   [test] batch 1600/2048 (132s)
+2026-05-06 10:39:35 | INFO |   [test] batch 1700/2048 (140s)
+2026-05-06 10:39:43 | INFO |   [test] batch 1800/2048 (148s)
+2026-05-06 10:39:52 | INFO |   [test] batch 1900/2048 (156s)
+2026-05-06 10:40:00 | INFO |   [test] batch 2000/2048 (165s)
+2026-05-06 10:40:04 | INFO |   [test] batch 2048/2048 (168s)
+2026-05-06 10:40:04 | INFO | ------------------------------------------------------------------------
+2026-05-06 10:40:04 | INFO |   combo: stain=False, tta=True, bn_recal=False
+2026-05-06 10:40:04 | INFO |   Collecting val probs (stain=False, tta=True) ...
+2026-05-06 10:40:52 | INFO |   [val] batch 100/2048 (48s)
+2026-05-06 10:41:40 | INFO |   [val] batch 200/2048 (96s)
+2026-05-06 10:42:28 | INFO |   [val] batch 300/2048 (144s)
+2026-05-06 10:43:16 | INFO |   [val] batch 400/2048 (192s)
+2026-05-06 10:44:04 | INFO |   [val] batch 500/2048 (240s)
+2026-05-06 10:44:52 | INFO |   [val] batch 600/2048 (288s)
+2026-05-06 10:45:40 | INFO |   [val] batch 700/2048 (336s)
+2026-05-06 10:46:28 | INFO |   [val] batch 800/2048 (384s)
+2026-05-06 10:47:16 | INFO |   [val] batch 900/2048 (432s)
+2026-05-06 10:48:04 | INFO |   [val] batch 1000/2048 (481s)
+2026-05-06 10:48:52 | INFO |   [val] batch 1100/2048 (529s)
+2026-05-06 10:49:40 | INFO |   [val] batch 1200/2048 (576s)
+2026-05-06 10:50:28 | INFO |   [val] batch 1300/2048 (625s)
+2026-05-06 10:51:17 | INFO |   [val] batch 1400/2048 (673s)
+2026-05-06 10:52:04 | INFO |   [val] batch 1500/2048 (721s)
+2026-05-06 10:52:53 | INFO |   [val] batch 1600/2048 (769s)
+2026-05-06 10:53:41 | INFO |   [val] batch 1700/2048 (817s)
+2026-05-06 10:54:29 | INFO |   [val] batch 1800/2048 (866s)
+2026-05-06 10:55:17 | INFO |   [val] batch 1900/2048 (913s)
+2026-05-06 10:56:05 | INFO |   [val] batch 2000/2048 (961s)
+2026-05-06 10:56:28 | INFO |   [val] batch 2048/2048 (984s)
+2026-05-06 10:56:28 | INFO |   Collecting test probs (stain=False, tta=True) ...
+2026-05-06 10:57:17 | INFO |   [test] batch 100/2048 (49s)
+2026-05-06 10:58:04 | INFO |   [test] batch 200/2048 (96s)
+2026-05-06 10:58:52 | INFO |   [test] batch 300/2048 (144s)
+2026-05-06 10:59:40 | INFO |   [test] batch 400/2048 (192s)
+2026-05-06 11:00:29 | INFO |   [test] batch 500/2048 (241s)
+2026-05-06 11:01:16 | INFO |   [test] batch 600/2048 (288s)
+2026-05-06 11:02:04 | INFO |   [test] batch 700/2048 (336s)
+2026-05-06 11:02:52 | INFO |   [test] batch 800/2048 (384s)
+2026-05-06 11:03:40 | INFO |   [test] batch 900/2048 (432s)
+2026-05-06 11:04:28 | INFO |   [test] batch 1000/2048 (480s)
+2026-05-06 11:05:16 | INFO |   [test] batch 1100/2048 (528s)
+2026-05-06 11:06:04 | INFO |   [test] batch 1200/2048 (576s)
+2026-05-06 11:06:52 | INFO |   [test] batch 1300/2048 (624s)
+2026-05-06 11:07:40 | INFO |   [test] batch 1400/2048 (672s)
+2026-05-06 11:08:28 | INFO |   [test] batch 1500/2048 (720s)
+2026-05-06 11:09:16 | INFO |   [test] batch 1600/2048 (768s)
+2026-05-06 11:10:04 | INFO |   [test] batch 1700/2048 (815s)
+2026-05-06 11:10:52 | INFO |   [test] batch 1800/2048 (863s)
+2026-05-06 11:11:40 | INFO |   [test] batch 1900/2048 (912s)
+2026-05-06 11:12:28 | INFO |   [test] batch 2000/2048 (960s)
+2026-05-06 11:12:51 | INFO |   [test] batch 2048/2048 (983s)
+2026-05-06 11:12:51 | INFO | ------------------------------------------------------------------------
+2026-05-06 11:12:51 | INFO |   combo: stain=True, tta=False, bn_recal=False
+2026-05-06 11:12:51 | INFO |   Collecting val probs (stain=True, tta=False) ...
+2026-05-06 11:13:00 | INFO |   [val] batch 100/2048 (9s)
+2026-05-06 11:13:09 | INFO |   [val] batch 200/2048 (18s)
+2026-05-06 11:13:17 | INFO |   [val] batch 300/2048 (27s)
+2026-05-06 11:13:26 | INFO |   [val] batch 400/2048 (35s)
+2026-05-06 11:13:35 | INFO |   [val] batch 500/2048 (44s)
+2026-05-06 11:13:43 | INFO |   [val] batch 600/2048 (53s)
+2026-05-06 11:13:52 | INFO |   [val] batch 700/2048 (61s)
+2026-05-06 11:14:01 | INFO |   [val] batch 800/2048 (70s)
+2026-05-06 11:14:10 | INFO |   [val] batch 900/2048 (79s)
+2026-05-06 11:14:18 | INFO |   [val] batch 1000/2048 (88s)
+2026-05-06 11:14:27 | INFO |   [val] batch 1100/2048 (96s)
+2026-05-06 11:14:36 | INFO |   [val] batch 1200/2048 (105s)
+2026-05-06 11:14:44 | INFO |   [val] batch 1300/2048 (114s)
+2026-05-06 11:14:53 | INFO |   [val] batch 1400/2048 (122s)
+2026-05-06 11:15:02 | INFO |   [val] batch 1500/2048 (131s)
+2026-05-06 11:15:10 | INFO |   [val] batch 1600/2048 (140s)
+2026-05-06 11:15:19 | INFO |   [val] batch 1700/2048 (148s)
+2026-05-06 11:15:28 | INFO |   [val] batch 1800/2048 (157s)
+2026-05-06 11:15:37 | INFO |   [val] batch 1900/2048 (166s)
+2026-05-06 11:15:45 | INFO |   [val] batch 2000/2048 (174s)
+2026-05-06 11:15:49 | INFO |   [val] batch 2048/2048 (179s)
+2026-05-06 11:15:49 | INFO |   Collecting test probs (stain=True, tta=False) ...
+2026-05-06 11:15:58 | INFO |   [test] batch 100/2048 (9s)
+2026-05-06 11:16:07 | INFO |   [test] batch 200/2048 (18s)
+2026-05-06 11:16:16 | INFO |   [test] batch 300/2048 (27s)
+2026-05-06 11:16:25 | INFO |   [test] batch 400/2048 (36s)
+2026-05-06 11:16:34 | INFO |   [test] batch 500/2048 (45s)
+2026-05-06 11:16:43 | INFO |   [test] batch 600/2048 (53s)
+2026-05-06 11:16:52 | INFO |   [test] batch 700/2048 (62s)
+2026-05-06 11:17:01 | INFO |   [test] batch 800/2048 (71s)
+2026-05-06 11:17:09 | INFO |   [test] batch 900/2048 (80s)
+2026-05-06 11:17:18 | INFO |   [test] batch 1000/2048 (89s)
+2026-05-06 11:17:27 | INFO |   [test] batch 1100/2048 (98s)
+2026-05-06 11:17:36 | INFO |   [test] batch 1200/2048 (107s)
+2026-05-06 11:17:45 | INFO |   [test] batch 1300/2048 (116s)
+2026-05-06 11:17:54 | INFO |   [test] batch 1400/2048 (125s)
+2026-05-06 11:18:03 | INFO |   [test] batch 1500/2048 (134s)
+2026-05-06 11:18:12 | INFO |   [test] batch 1600/2048 (143s)
+2026-05-06 11:18:21 | INFO |   [test] batch 1700/2048 (152s)
+2026-05-06 11:18:30 | INFO |   [test] batch 1800/2048 (161s)
+2026-05-06 11:18:39 | INFO |   [test] batch 1900/2048 (169s)
+2026-05-06 11:18:48 | INFO |   [test] batch 2000/2048 (178s)
+2026-05-06 11:18:52 | INFO |   [test] batch 2048/2048 (183s)
+2026-05-06 11:18:52 | INFO | ------------------------------------------------------------------------
+2026-05-06 11:18:52 | INFO |   combo: stain=True, tta=True, bn_recal=False
+2026-05-06 11:18:52 | INFO |   Collecting val probs (stain=True, tta=True) ...
+2026-05-06 11:19:40 | INFO |   [val] batch 100/2048 (48s)
+2026-05-06 11:20:28 | INFO |   [val] batch 200/2048 (96s)
+2026-05-06 11:21:16 | INFO |   [val] batch 300/2048 (144s)
+2026-05-06 11:22:04 | INFO |   [val] batch 400/2048 (192s)
+2026-05-06 11:22:52 | INFO |   [val] batch 500/2048 (240s)
+2026-05-06 11:23:40 | INFO |   [val] batch 600/2048 (288s)
+2026-05-06 11:24:28 | INFO |   [val] batch 700/2048 (336s)
+2026-05-06 11:25:16 | INFO |   [val] batch 800/2048 (384s)
+2026-05-06 11:26:04 | INFO |   [val] batch 900/2048 (432s)
+2026-05-06 11:26:53 | INFO |   [val] batch 1000/2048 (481s)
+2026-05-06 11:27:42 | INFO |   [val] batch 1100/2048 (530s)
+2026-05-06 11:28:30 | INFO |   [val] batch 1200/2048 (578s)
+2026-05-06 11:29:18 | INFO |   [val] batch 1300/2048 (626s)
+2026-05-06 11:30:08 | INFO |   [val] batch 1400/2048 (677s)
+2026-05-06 11:31:00 | INFO |   [val] batch 1500/2048 (728s)
+2026-05-06 11:31:51 | INFO |   [val] batch 1600/2048 (779s)
+2026-05-06 11:32:43 | INFO |   [val] batch 1700/2048 (831s)
+2026-05-06 11:33:34 | INFO |   [val] batch 1800/2048 (882s)
+2026-05-06 11:34:25 | INFO |   [val] batch 1900/2048 (933s)
+2026-05-06 11:35:13 | INFO |   [val] batch 2000/2048 (981s)
+2026-05-06 11:35:36 | INFO |   [val] batch 2048/2048 (1005s)
+2026-05-06 11:35:36 | INFO |   Collecting test probs (stain=True, tta=True) ...
+2026-05-06 11:36:26 | INFO |   [test] batch 100/2048 (49s)
+2026-05-06 11:37:15 | INFO |   [test] batch 200/2048 (99s)
+2026-05-06 11:38:06 | INFO |   [test] batch 300/2048 (150s)
+2026-05-06 11:38:57 | INFO |   [test] batch 400/2048 (200s)
+2026-05-06 11:39:45 | INFO |   [test] batch 500/2048 (249s)
+2026-05-06 11:40:34 | INFO |   [test] batch 600/2048 (297s)
+2026-05-06 11:41:24 | INFO |   [test] batch 700/2048 (347s)
+2026-05-06 11:42:12 | INFO |   [test] batch 800/2048 (396s)
+2026-05-06 11:43:00 | INFO |   [test] batch 900/2048 (444s)
+2026-05-06 11:43:49 | INFO |   [test] batch 1000/2048 (492s)
+2026-05-06 11:44:38 | INFO |   [test] batch 1100/2048 (541s)
+2026-05-06 11:45:26 | INFO |   [test] batch 1200/2048 (590s)
+2026-05-06 11:46:14 | INFO |   [test] batch 1300/2048 (638s)
+2026-05-06 11:47:03 | INFO |   [test] batch 1400/2048 (686s)
+2026-05-06 11:47:52 | INFO |   [test] batch 1500/2048 (735s)
+2026-05-06 11:48:40 | INFO |   [test] batch 1600/2048 (784s)
+2026-05-06 11:49:28 | INFO |   [test] batch 1700/2048 (832s)
+2026-05-06 11:50:16 | INFO |   [test] batch 1800/2048 (880s)
+2026-05-06 11:51:05 | INFO |   [test] batch 1900/2048 (929s)
+2026-05-06 11:51:52 | INFO |   [test] batch 2000/2048 (976s)
+2026-05-06 11:52:15 | INFO |   [test] batch 2048/2048 (998s)
+2026-05-06 11:52:15 | INFO | ========================================================================
+2026-05-06 11:52:15 | INFO |   Evaluating configurations
+2026-05-06 11:52:15 | INFO | ========================================================================
+2026-05-06 11:52:16 | INFO |   [all_on] τ* = 0.87  (val F1 = 0.7457)
+2026-05-06 11:52:16 | INFO |         all_on | acc=0.6161 prec=0.5808 rec=0.8332 f1=0.6845 auc=0.6706 τ=0.87
+2026-05-06 11:52:16 | INFO |        all_off | acc=0.5753 prec=0.5440 rec=0.9286 f1=0.6861 auc=0.6851 τ=0.50
+2026-05-06 11:52:16 | INFO |   [off_stain] τ* = 0.95  (val F1 = 0.7218)
+2026-05-06 11:52:16 | INFO |      off_stain | acc=0.5937 prec=0.5609 rec=0.8616 f1=0.6795 auc=0.6832 τ=0.95
+2026-05-06 11:52:16 | INFO |       off_prob | acc=0.6182 prec=0.5765 rec=0.8895 f1=0.6996 auc=0.6706 τ=0.50
+2026-05-06 11:52:17 | INFO |   [off_tta] τ* = 0.95  (val F1 = 0.7389)
+2026-05-06 11:52:17 | INFO |        off_tta | acc=0.6212 prec=0.5799 rec=0.8785 f1=0.6986 auc=0.6806 τ=0.95
+2026-05-06 11:52:17 | INFO |     off_thresh | acc=0.6175 prec=0.5758 rec=0.8915 f1=0.6997 auc=0.6706 τ=0.50
+2026-05-06 11:52:17 | INFO | ------------------------------------------------------------------------
+2026-05-06 11:52:17 | INFO |   [sanity] all_off vs 10_cross_dataset baseline: max|Δ|=0.0000
+2026-05-06 11:52:17 | INFO |     accuracy  : optimized=0.5753  baseline=0.5753  Δ=+0.0000
+2026-05-06 11:52:17 | INFO |     precision : optimized=0.5440  baseline=0.5440  Δ=+0.0000
+2026-05-06 11:52:17 | INFO |     recall    : optimized=0.9286  baseline=0.9286  Δ=+0.0000
+2026-05-06 11:52:17 | INFO |     f1_binary : optimized=0.6861  baseline=0.6861  Δ=+0.0000
+2026-05-06 11:52:17 | INFO |     roc_auc   : optimized=0.6851  baseline=0.6851  Δ=+0.0000
+2026-05-06 11:52:17 | INFO |   [sanity] PASS — all_off reproduces baseline to 4dp.
+2026-05-06 11:52:17 | INFO | Saved: C:\ml_project\results\metrics\cross_dataset_metrics_optimized.json
+2026-05-06 11:52:17 | INFO | Saved: C:\ml_project\results\metrics\cross_dataset_flag_ablation.json
+2026-05-06 11:52:17 | INFO | Saved: C:\ml_project\results\plots\cross_dataset_confusion_optimized.png
+2026-05-06 11:52:18 | INFO | Saved: C:\ml_project\results\plots\cross_dataset_threshold_sweep.png
+2026-05-06 11:52:18 | INFO | ========================================================================
+2026-05-06 11:52:18 | INFO |   PHASE 5 SUMMARY
+2026-05-06 11:52:18 | INFO | ========================================================================
+2026-05-06 11:52:18 | INFO |   metric     |   baseline |     all_on |          Δ
+2026-05-06 11:52:18 | INFO |   --------------------------------------------------
+2026-05-06 11:52:18 | INFO |   accuracy   |     0.5753 |     0.6161 |    +0.0408
+2026-05-06 11:52:18 | INFO |   precision  |     0.5440 |     0.5808 |    +0.0368
+2026-05-06 11:52:18 | INFO |   recall     |     0.9286 |     0.8332 |    -0.0954
+2026-05-06 11:52:18 | INFO |   f1_binary  |     0.6861 |     0.6845 |    -0.0016
+2026-05-06 11:52:18 | INFO |   roc_auc    |     0.6851 |     0.6706 |    -0.0145
+2026-05-06 11:52:18 | INFO |   --------------------------------------------------
+2026-05-06 11:52:18 | INFO |   chosen_threshold = 0.87
+2026-05-06 11:52:18 | INFO | 
+  FLAG-ABLATION (acc drop when individual flag is OFF):
+2026-05-06 11:52:18 | INFO |     stain   : Δacc when off = -0.0224  (contribution = +0.0224)
+2026-05-06 11:52:18 | INFO |     thresh  : Δacc when off = +0.0014  (contribution = -0.0014)
+2026-05-06 11:52:18 | INFO |     prob    : Δacc when off = +0.0021  (contribution = -0.0021)
+2026-05-06 11:52:18 | INFO |     tta     : Δacc when off = +0.0051  (contribution = -0.0051)
+2026-05-06 11:52:18 | INFO | ========================================================================

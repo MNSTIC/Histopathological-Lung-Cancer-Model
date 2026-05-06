@@ -1,0 +1,108 @@
+{
+  "scenario": "S2_LC25000_to_PCam_zero_shot_optimized",
+  "phase": 5,
+  "checkpoint": "hagcanet_best.pth",
+  "n_test": 32768,
+  "flags_used": {
+    "stain": true,
+    "prob": true,
+    "tta": true,
+    "thresh": true,
+    "bn": false
+  },
+  "chosen_threshold": 0.87,
+  "accuracy": 0.6161,
+  "precision": 0.5808,
+  "recall": 0.8332,
+  "f1_binary": 0.6845,
+  "roc_auc": 0.6706,
+  "deltas_vs_baseline": {
+    "accuracy": 0.0408,
+    "precision": 0.0368,
+    "recall": -0.0954,
+    "f1_binary": -0.0016,
+    "roc_auc": -0.0145
+  },
+  "baseline_reference": {
+    "accuracy": 0.5753,
+    "precision": 0.544,
+    "recall": 0.9286,
+    "f1_binary": 0.6861,
+    "roc_auc": 0.6851
+  },
+  "flag_ablation": {
+    "stain": {
+      "off_metrics": {
+        "accuracy": 0.5937,
+        "precision": 0.5609,
+        "recall": 0.8616,
+        "f1_binary": 0.6795,
+        "roc_auc": 0.6832,
+        "chosen_threshold": 0.95
+      },
+      "delta_primary_minus_off": {
+        "accuracy": 0.0224,
+        "precision": 0.0199,
+        "recall": -0.0284,
+        "f1_binary": 0.005,
+        "roc_auc": -0.0126
+      }
+    },
+    "prob": {
+      "off_metrics": {
+        "accuracy": 0.6182,
+        "precision": 0.5765,
+        "recall": 0.8895,
+        "f1_binary": 0.6996,
+        "roc_auc": 0.6706,
+        "chosen_threshold": 0.5
+      },
+      "delta_primary_minus_off": {
+        "accuracy": -0.0021,
+        "precision": 0.0043,
+        "recall": -0.0563,
+        "f1_binary": -0.0151,
+        "roc_auc": 0.0
+      }
+    },
+    "tta": {
+      "off_metrics": {
+        "accuracy": 0.6212,
+        "precision": 0.5799,
+        "recall": 0.8785,
+        "f1_binary": 0.6986,
+        "roc_auc": 0.6806,
+        "chosen_threshold": 0.95
+      },
+      "delta_primary_minus_off": {
+        "accuracy": -0.0051,
+        "precision": 0.0009,
+        "recall": -0.0453,
+        "f1_binary": -0.0141,
+        "roc_auc": -0.01
+      }
+    },
+    "thresh": {
+      "off_metrics": {
+        "accuracy": 0.6175,
+        "precision": 0.5758,
+        "recall": 0.8915,
+        "f1_binary": 0.6997,
+        "roc_auc": 0.6706,
+        "chosen_threshold": 0.5
+      },
+      "delta_primary_minus_off": {
+        "accuracy": -0.0014,
+        "precision": 0.005,
+        "recall": -0.0583,
+        "f1_binary": -0.0152,
+        "roc_auc": 0.0
+      }
+    }
+  },
+  "class_mapping": {
+    "lung_aca (idx 0)": "tumor (1)",
+    "lung_n   (idx 1)": "normal (0)",
+    "lung_scc (idx 2)": "tumor (1)"
+  }
+}
