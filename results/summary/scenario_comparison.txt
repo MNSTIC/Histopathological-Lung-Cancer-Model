@@ -1,6 +1,6 @@
 =================================================================
   HAGCA-Net — THREE-SCENARIO COMPARISON
-  Generated: 2026-05-06 10:34:01
+  Generated: 2026-05-07 01:18:06
 =================================================================
 
   SCENARIOS
@@ -12,11 +12,11 @@
 =================================================================
   Metric                S1 (LC->LC)  S2 (LC->PCam)  S3 (PCam->PCam)
   ---------------------------------------------------------------
-  Accuracy                   0.9991 *        0.5753           0.9232  
-  F1 (task)                  0.9991 *        0.6861           0.9205  
-  ROC-AUC                    1.0000 *        0.6851           0.9765  
-  Precision                  0.9991 *        0.5440           0.9525  
-  Recall                     0.9991 *        0.9286           0.8906  
+  Accuracy                   0.9991 *        0.6179           0.9232  
+  F1 (task)                  0.9991 *        0.7004           0.9205  
+  ROC-AUC                    1.0000 *        0.6805           0.9765  
+  Precision                  0.9991 *        0.5759           0.9525  
+  Recall                     0.9991 *        0.8935           0.8906  
 
   * = best value in row
 
@@ -29,12 +29,12 @@
 
   2. S2 (zero-shot domain shift): Without any fine-tuning on
      lymph node images, the model still achieves above-chance AUC
-     (0.6851) and high tumor recall (0.9286).
+     (0.6805) and high tumor recall (0.8935).
      However precision is limited due to severe domain shift.
 
   3. S3 (in-domain PCam): Fine-tuning on PCam data substantially
-     improves precision (from 0.5440 to 0.9525)
-     and overall accuracy (from 57.53% to 92.32%),
+     improves precision (from 0.5759 to 0.9525)
+     and overall accuracy (from 61.79% to 92.32%),
      confirming that domain-specific training is critical for
      high-precision deployment in a new tissue type.
 

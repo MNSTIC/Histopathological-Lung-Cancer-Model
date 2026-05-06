@@ -3151,3 +3151,62 @@ Pipeline complete! All 14 steps done.
 2026-05-06 11:52:18 | INFO |     prob    : Δacc when off = +0.0021  (contribution = -0.0021)
 2026-05-06 11:52:18 | INFO |     tta     : Δacc when off = +0.0051  (contribution = -0.0051)
 2026-05-06 11:52:18 | INFO | ========================================================================
+2026-05-07 01:13:23 | INFO | ========================================================================
+2026-05-07 01:13:23 | INFO |   STEP 10: CANONICAL S2 EVALUATION (LC25000 → PCam zero-shot)
+2026-05-07 01:13:23 | INFO | ========================================================================
+2026-05-07 01:13:23 | INFO |   primary flags: stain=True, prob_map=False, tta=False, thresh=False, bn_recal=False
+2026-05-07 01:13:23 | INFO |   flag ablation: False
+2026-05-07 01:13:25 | INFO | Loaded hagcanet_best.pth  (epoch 22, val_f1=1.0000)
+2026-05-07 01:13:25 | INFO | Loaded LC25000 Reinhard ref stats from cache: [159.49, 34.25, 159.16, 13.69, 88.92, 13.4]
+2026-05-07 01:13:25 | INFO | Need 1 unique (stain, tta, bn_recal) combos: [(True, False, False)]
+2026-05-07 01:13:25 | INFO | ------------------------------------------------------------------------
+2026-05-07 01:13:25 | INFO |   combo: stain=True, tta=False, bn_recal=False
+2026-05-07 01:13:25 | INFO |   Collecting test probs (stain=True, tta=False) ...
+2026-05-07 01:13:54 | INFO |   [test] batch 100/2048 (29s)
+2026-05-07 01:14:03 | INFO |   [test] batch 200/2048 (38s)
+2026-05-07 01:14:11 | INFO |   [test] batch 300/2048 (47s)
+2026-05-07 01:14:20 | INFO |   [test] batch 400/2048 (55s)
+2026-05-07 01:14:29 | INFO |   [test] batch 500/2048 (64s)
+2026-05-07 01:14:37 | INFO |   [test] batch 600/2048 (73s)
+2026-05-07 01:14:46 | INFO |   [test] batch 700/2048 (81s)
+2026-05-07 01:14:55 | INFO |   [test] batch 800/2048 (90s)
+2026-05-07 01:15:04 | INFO |   [test] batch 900/2048 (99s)
+2026-05-07 01:15:12 | INFO |   [test] batch 1000/2048 (108s)
+2026-05-07 01:15:22 | INFO |   [test] batch 1100/2048 (117s)
+2026-05-07 01:15:31 | INFO |   [test] batch 1200/2048 (126s)
+2026-05-07 01:15:41 | INFO |   [test] batch 1300/2048 (136s)
+2026-05-07 01:15:50 | INFO |   [test] batch 1400/2048 (146s)
+2026-05-07 01:16:00 | INFO |   [test] batch 1500/2048 (155s)
+2026-05-07 01:16:09 | INFO |   [test] batch 1600/2048 (164s)
+2026-05-07 01:16:18 | INFO |   [test] batch 1700/2048 (174s)
+2026-05-07 01:16:28 | INFO |   [test] batch 1800/2048 (183s)
+2026-05-07 01:16:37 | INFO |   [test] batch 1900/2048 (192s)
+2026-05-07 01:16:46 | INFO |   [test] batch 2000/2048 (201s)
+2026-05-07 01:16:50 | INFO |   [test] batch 2048/2048 (206s)
+2026-05-07 01:16:50 | INFO | ========================================================================
+2026-05-07 01:16:50 | INFO |   Evaluating configurations
+2026-05-07 01:16:50 | INFO | ========================================================================
+2026-05-07 01:16:50 | INFO |        primary | acc=0.6179 prec=0.5759 rec=0.8935 f1=0.7004 auc=0.6805 τ=0.50
+2026-05-07 01:16:50 | INFO | Saved: C:\ml_project\results\metrics\cross_dataset_metrics.json
+2026-05-07 01:16:50 | INFO | Saved: C:\ml_project\results\metrics\cross_dataset_report.txt
+2026-05-07 01:16:51 | INFO | Saved: C:\ml_project\results\plots\cross_dataset_confusion.png
+2026-05-07 01:16:51 | INFO | ========================================================================
+2026-05-07 01:16:51 | INFO |   CANONICAL S2 RESULTS (PCam test split)
+2026-05-07 01:16:51 | INFO | ========================================================================
+2026-05-07 01:16:51 | INFO |   Accuracy       : 0.6179
+2026-05-07 01:16:51 | INFO |   Precision      : 0.5759
+2026-05-07 01:16:51 | INFO |   Recall         : 0.8935
+2026-05-07 01:16:51 | INFO |   F1 (binary)    : 0.7004
+2026-05-07 01:16:51 | INFO |   ROC-AUC        : 0.6805
+2026-05-07 01:16:51 | INFO |   Threshold τ    : 0.50
+2026-05-07 01:16:51 | INFO |   Flags ON       : ['stain']
+2026-05-07 01:16:51 | INFO |   Samples tested : 32,768
+2026-05-07 01:18:05 | INFO | ============================================================
+2026-05-07 01:18:05 | INFO |   STEP 14: THREE-SCENARIO COMPARISON
+2026-05-07 01:18:05 | INFO | ============================================================
+2026-05-07 01:18:05 | INFO | All three scenario metric files loaded.
+2026-05-07 01:18:06 | INFO | Text report saved: C:\ml_project\results\summary\scenario_comparison.txt
+2026-05-07 01:18:06 | INFO | JSON saved: C:\ml_project\results\summary\scenario_comparison.json
+2026-05-07 01:18:06 | INFO | 
+Pipeline complete! All 14 steps done.
+2026-05-07 01:18:06 | INFO | See results/summary/scenario_comparison.txt for the full comparison.

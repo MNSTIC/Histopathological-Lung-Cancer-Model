@@ -589,3 +589,90 @@ The stale baseline JSON has been archived at
 - `CLAUDE.md` — this entry.
 
 **Next:** Phase 5 complete; awaiting user decision on next phase.
+
+---
+
+### Session 10 — 2026-05-07 — Pipeline consolidation post-Phase-5
+
+**Refactor (no new science):** the Phase 5 sandbox script
+`src/10b_cross_dataset_optimized.py` was promoted to the canonical
+`src/10_cross_dataset.py`, and `src/13a_precache_pcam.py` +
+`src/13b_threshold_tta.py` were wired into `main.py`.
+
+**What changed:**
+
+- **`src/10_cross_dataset.py`** — replaced with the body of 10b. Five
+  toggleable inference-time + post-hoc flags now live at the top of the
+  canonical script (`USE_LC25000_STAIN_NORM`, `USE_PROBABILITY_MAPPING`,
+  `USE_8_AUG_TTA`, `USE_THRESHOLD_TUNING`, `USE_BN_RECALIBRATION`).
+  Defaults set to the **best single-flag config from the Phase 5 ablation**:
+  stain norm ON, all others OFF (the ablation showed only stain norm
+  contributed positively; prob mapping, 8-aug TTA, and threshold tuning
+  each marginally hurt). The Phase 5 FP32 softmax fix is preserved
+  (softmax inside autocast). New canonical S2 metrics (stain-only):
+  Acc 0.6179, Prec 0.5759, Rec 0.8935, F1 0.7004, AUC 0.6805.
+  Output schema preserves the keys `14_compare_scenarios.py` reads
+  (`n_samples`, `accuracy`, `precision`, `recall`, `f1_binary`,
+  `roc_auc`) plus adds `flags_used`, `chosen_threshold`, and
+  `softmax_precision: "FP32 (Phase 5 fix; supersedes pre-fix FP16
+  baseline)"`.
+- **`src/10b_cross_dataset_optimized.py`** — deleted (consolidated
+  into the canonical 10).
+- **`main.py`** — three changes:
+  1. `PIPELINE` step `num` field switched from `int` to `str` so
+     non-numeric IDs `13a` and `13b` are accepted.
+  2. `13a_precache_pcam.py` inserted before `13_pcam_train_test.py`
+     (idempotent — its sentinel `data/external_test/pcam_preprocessed.h5`
+     means the step is auto-skipped if the cache already exists).
+  3. `13b_threshold_tta.py` inserted after `13_pcam_train_test.py`.
+  4. `--from` and `--only` switched from `int` to `str` parsing so any
+     of `1`, `13`, `13a`, `13b`, `14` are valid IDs.
+  5. UTF-8 stdout reconfigure at top of file so the box-drawing
+     characters in banners/dividers don't crash on Windows cp1252.
+- **`src/14_compare_scenarios.py`** — docstring only: notes that S2
+  metrics now come from the FP32-corrected, stain-normalized canonical
+  pipeline.
+
+**New ordered pipeline (16 steps):**
+01, 02, 03, 04, 05, 06, 07, 08, 09, **10** (canonical S2 with FP32 softmax
++ stain norm), 11, 12, **13a**, 13, **13b**, 14.
+
+**Refreshed three-scenario comparison (post-consolidation):**
+
+| Metric    | S1 (LC→LC) | S2 (LC→PCam) | S3 (PCam→PCam) |
+|-----------|------------|--------------|----------------|
+| Accuracy  | 0.9991     | **0.6179**   | 0.9232         |
+| F1        | 0.9991     | **0.7004**   | 0.9205         |
+| ROC-AUC   | 1.0000     | **0.6805**   | 0.9765         |
+| Precision | 0.9991     | 0.5759       | 0.9525         |
+| Recall    | 0.9991     | 0.8935       | 0.8906         |
+
+S2 row improved across the board vs the pre-Phase-5 FP16 baseline
+(Acc 0.5754 → 0.6179, F1 0.6861 → 0.7004, AUC 0.5987 → 0.6805) thanks
+to two effects already documented in Session 9: (a) the FP32 softmax
+fix lifted AUC; (b) stain norm is now ON by default in the canonical
+S2 pipeline.
+
+**Files touched:**
+- `src/10_cross_dataset.py` (replaced)
+- `src/10b_cross_dataset_optimized.py` (deleted)
+- `main.py` (PIPELINE expanded + str IDs + UTF-8 stdout)
+- `src/14_compare_scenarios.py` (docstring only)
+- `results/metrics/cross_dataset_metrics.json` (refreshed by new 10)
+- `results/metrics/cross_dataset_report.txt` (refreshed)
+- `results/plots/cross_dataset_confusion.png` (refreshed)
+- `results/summary/scenario_comparison.{txt,json,png}` (refreshed)
+- `CLAUDE.md` (this entry)
+- `OPTIMIZATION_STATUS.md` (post_phase_consolidation block)
+
+**Hard constraints honored:**
+- `src/06_model_hagcanet.py` not touched.
+- No model weights, hyperparameters, training logic, Reinhard math, or
+  CLAHE math changed.
+- `src/13a_precache_pcam.py`, `src/13b_threshold_tta.py`, `07_train.py`,
+  `08_evaluate.py`, `13_pcam_train_test.py` all retained as-is.
+- `cross_dataset_metrics_v1_stale.json` (the FP16-baseline archive)
+  not touched.
+
+**Next:** awaiting user decision (final report, Phase 3.1 retrain, or
+ship as-is).

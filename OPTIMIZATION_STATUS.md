@@ -1,5 +1,7 @@
 ---
 last_phase_completed: 5
+post_phase_consolidation: true
+canonical_pipeline_steps: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13a", "13", "13b", "14"]
 partial_phase_4: true
 phase_4_files_documented: [config.py, 01_data_cleaning.py, 02_data_splitting.py, 03_preprocessing.py]
 next_phase: done_or_user_choice

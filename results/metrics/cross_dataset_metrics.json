@@ -1,11 +1,21 @@
 {
+  "scenario": "S2_LC25000_to_PCam_zero_shot",
   "dataset": "PatchCamelyon_test",
   "n_samples": 32768,
-  "accuracy": 0.5753,
-  "precision": 0.544,
-  "recall": 0.9286,
-  "f1_binary": 0.6861,
-  "roc_auc": 0.6851,
+  "accuracy": 0.6179,
+  "precision": 0.5759,
+  "recall": 0.8935,
+  "f1_binary": 0.7004,
+  "roc_auc": 0.6805,
+  "chosen_threshold": 0.5,
+  "flags_used": {
+    "stain": true,
+    "prob": false,
+    "tta": false,
+    "thresh": false,
+    "bn": false
+  },
+  "softmax_precision": "FP32 (Phase 5 fix; supersedes pre-fix FP16 baseline)",
   "class_mapping": {
     "lung_aca (idx 0)": "tumor (1)",
     "lung_n   (idx 1)": "normal (0)",

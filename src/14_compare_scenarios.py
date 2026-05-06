@@ -10,6 +10,11 @@ Scenario 1 — LC25000 -> LC25000
 Scenario 2 — LC25000 -> PCam  (zero-shot)
   Model trained on LC25000, evaluated on PatchCamelyon without fine-tuning.
   Source: results/metrics/cross_dataset_metrics.json
+  Post-Phase-5: this file is now produced by the canonical
+  src/10_cross_dataset.py with FP32 softmax (the Phase 5 bug fix that
+  superseded the legacy FP16 AUC of 0.5987 with the corrected ~0.685)
+  and LC25000 stain normalization enabled by default (the only flag in
+  the Phase 5 ablation that contributed positively).
 
 Scenario 3 — PCam -> PCam
   Model trained, validated, and tested entirely on PatchCamelyon.
